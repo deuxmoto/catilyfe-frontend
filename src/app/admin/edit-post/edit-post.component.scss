@@ -1,0 +1,197 @@
+@import "../../styles/helpers";
+
+$bar-height: 4rem;
+
+:host {
+    height: 100vh;
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+}
+
+/*
+ * Top bar styling
+ */
+.top-bar {
+    flex: none;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.top-bar-inner {
+    height: $bar-height;
+    display: flex;
+    align-items: center;
+}
+.top-bar-title {
+    font-size: 2rem;
+    font-weight: bold;
+}
+.top-bar-back {
+    font-size: 1.5rem;
+    padding: 1rem;
+    margin-right: 1rem;
+    display: flex;
+    align-items: center;
+
+    @include if-larger-than($bp-lg) {
+        margin-left: -1rem;
+    }
+}
+.top-bar-error {
+    background-color: red;
+    color: white;
+    padding: 1rem 0;
+
+    .top-bar-error-inner {
+        position: relative;
+    }
+
+    .top-bar-error-close {
+        font-size: 11px;
+        cursor: pointer;
+    }
+}
+
+/*
+ * Tab group styling
+ */
+.tab-group {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    button {
+        flex: none;
+        min-width: 10rem;
+        height: 3rem;
+        border-radius: 0px;
+        margin-bottom: -1px; // to overlap tab-group bottom-border
+        text-transform: uppercase;
+
+        &:after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 0px;
+            bottom: 0px;
+            left: 0px;
+            background-color: green;
+            transition: 100ms;
+        }
+
+        &.active:after {
+            height: 4px;
+        }
+    }
+}
+.tab-body {
+    padding: 1rem;
+
+    @include if-larger-than($bp-lg) {
+        padding: 1rem 0 1rem;
+    }
+}
+
+/*
+ * Edit post main styling
+ */
+.edit-post {
+    max-width: 100vw;
+    flex: 1 1 auto;
+
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.edit-post-inner {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+
+    .tab-group {
+        flex: none;
+    }
+    .tab-body {
+        flex: 1 1 auto;
+    }
+}
+.edit-post-title {
+    font-size: 2.5rem;
+}
+.edit-post-field {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+.tags-container {
+    align-items: flex-end;
+}
+.mat-basic-chip {
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 1rem;
+    margin: 0px 5px 5px 0;
+    padding: 5px 10px;
+    max-width: 100%;
+
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+
+    .basic-chip-text {
+        flex: 1;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow-x: hidden;
+    }
+    .basic-chip-remove {
+        flex: none;
+    }
+}
+.slide-toggle-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    & > mat-slide-toggle {
+        margin-right: 1.5rem;
+    }
+}
+.loading {
+    padding: 2rem 0;
+}
+.post-content {
+    display: flex;
+    flex-direction: column;
+}
+.post-content__textarea {
+    flex: 1;
+    width: 100%;
+    border: rgba(0, 0, 0, 0.1) 1px solid;
+    padding: 10px;
+
+    &:focus {
+        border-color: rgba(0, 0, 0, 0.3);
+    }
+}
+
+/*
+ * Bottom bar styling
+ */
+.bottom-bar {
+    margin-top: auto;
+    background-color: white;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+.bottom-bar-inner {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: $bar-height;
+}
+.bottom-bar-item {
+    & + & {
+        margin-left: 1rem;
+    }
+}

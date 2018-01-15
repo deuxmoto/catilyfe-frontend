@@ -1,0 +1,97 @@
+@import "../../styles/helpers";
+
+$dark: black;
+$light: white;
+
+$transition-animation: 200ms ease;
+
+:host {
+    z-index: 100;
+
+    position: fixed;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.title-bar-container {
+    &__top-bar {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        transition: $transition-animation;
+
+        .-theme-light & {
+            background-color: white;
+            box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        }
+        .-theme-dark & {
+            background-color: $dark;
+            box-shadow: none;
+            border-bottom: fade-out($light, 0.5);
+        }
+        .-theme-transparent-light &, .-theme-transparent-dark & {
+            background-color: transparent;
+            box-shadow: none;
+            border-bottom: 0px;
+        }
+    }
+
+    &__top-bar-left {
+        margin-right: auto;
+    }
+
+    &__top-bar-right {
+        margin-left: auto;
+    }
+
+    &__item {
+        @include font-size-md();
+        height: $title-bar-height;
+        padding: 0 1.5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: $transition-animation;
+
+        @include if-larger-than-mobile() {
+            padding: 0 2.25rem;
+        }
+
+        .-theme-light & {
+            color: $dark;
+
+            &:hover {
+                background-color: darken($light, 10%);
+            }
+        }
+        .-theme-dark & {
+            color: $light;
+
+            &:hover {
+                background-color: lighten($dark, 10%);
+            }
+        }
+        .-theme-transparent-light & {
+            color: $light;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+        .-theme-transparent-dark & {
+            color: $dark;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+    }
+
+    &__branding {
+        @include lobster-font();
+        @include font-size-lg();
+    }
+}

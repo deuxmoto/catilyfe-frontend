@@ -1,0 +1,66 @@
+@import "../styles/helpers";
+
+:host {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    @include using-title-bar(2rem);
+}
+
+:host(.hide-overflow) {
+    overflow-y: hidden;
+}
+
+.admin-cards {
+    padding: 0 1rem;
+}
+
+.admin-card {
+    margin-bottom: 2rem;
+    overflow-x: auto;
+}
+
+// Created Posts card
+.cdk-column-postId {
+    width: 60px;
+    flex: none;
+}
+.cdk-column-postSlug {
+    flex: 1;
+    word-break: break-all;
+    padding-right: 0.5rem;
+}
+.cdk-column-postTitle {
+    flex: 2;
+    display: none;
+    word-wrap: break-word;
+    overflow: hidden;
+    padding-right: 0.5rem;
+
+    @include if-larger-than($bp-sm) {
+        display: initial;
+    }
+}
+.cdk-column-postWhenCreated {
+    flex: 1;
+}
+.posts-row {
+    cursor: pointer;
+    transition: 50ms;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+.posts-table mat-card-title {
+    display: flex;
+    align-items: flex-end;
+}
+.new-post {
+    margin-left: auto;
+    text-transform: uppercase;
+    font-size: 1rem;
+    color: rgba(0, 0, 0, 0.9);
+}

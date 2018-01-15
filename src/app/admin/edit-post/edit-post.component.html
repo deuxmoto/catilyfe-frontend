@@ -1,0 +1,95 @@
+<div class="top-bar">
+    <div class="top-bar-inner responsive-container">
+        <a class="top-bar-back" (click)="closeEditPost()">
+            <span class="fa fa-arrow-left"></span>
+        </a>
+        <h2 class="top-bar-title">
+            <span *ngIf="newPost">New Post</span>
+            <span *ngIf="!newPost">Edit Post</span>
+        </h2>
+    </div>
+    <div class="top-bar-error" *ngIf="lastError">
+        <div class="top-bar-error-inner responsive-container">
+            <button class="top-bar-error-close fa fa-times" (click)="closeErrorMessage()"></button>
+            {{lastError}}
+        </div>
+    </div>
+</div>
+
+<div class="edit-post" [ngSwitch]="state">
+
+    <div class="edit-post-inner responsive-container" *ngSwitchDefault [ngSwitch]="currentTab">
+
+        <div class="tab-group">
+            <button mat-button *ngFor="let tab of tabs" [ngClass]="{ active: currentTab == tab.value }" (click)="setCurrentTab(tab.value)">
+                {{tab.text}}
+            </button>
+        </div>
+
+        <div *ngSwitchCase="TabEnum.Metadata" class="tab-body">
+            <form [formGroup]="metadataForm">
+
+                <h3>Basic</h3>
+                <mat-form-field class="edit-post-field">
+                    <input matInput placeholder="Title" formControlName="title">
+                </mat-form-field>
+                <mat-form-field class="edit-post-field">
+                    <textarea matInput mdTextareaAutosize placeholder="Description" name="description" formControlName="description"></textarea>
+                </mat-form-field>
+                <div class="tags-container row edit-post-field">
+                    <mat-form-field class="col-xs-12 col-sm-8" floatPlaceholder="always">
+                        <mat-chip-list placeholder="Tags">
+                            <mat-basic-chip *ngFor="let tag of tags" removable="true" (remove)="tags.splice(tags.indexOf(tag), 1)">
+                                <span class="basic-chip-text">{{tag}}</span>
+                                <span matChipRemove class="fa fa-times basic-chip-remove"></span>
+                            </mat-basic-chip>
+                        </mat-chip-list>
+                    </mat-form-field>
+                    <mat-form-field class="col-xs-12 col-sm-4" floatPlaceholder="auto">
+                        <input #newTagInput matInput placeholder="New tag..." formControlName="newTag">
+                        <button matSuffix mat-button [ngStyle]="{ 'display': newTagInput.value.length == 0 ? 'none' : 'initial' }" (click)="addTag()">Add</button>
+                    </mat-form-field>
+                </div>
+
+                <h3>Publishing</h3>
+                <mat-form-field class="edit-post-field">
+                    <input matInput placeholder="Slug" name="slug" formControlName="slug">
+                </mat-form-field>
+                <datetime-picker class="edit-post-field" namePrefix="When published" name="whenPublished" formControlName="whenPublished"></datetime-picker>
+                <div class="edit-post-field slide-toggle-container">
+                    <mat-slide-toggle color="primary" formControlName="isReserved">Is reserved</mat-slide-toggle>
+                    <mat-slide-toggle color="primary" formControlName="isPublished">Is published</mat-slide-toggle>
+                </div>
+
+                <div *ngIf="!newPost">
+                    <h3>Read only</h3>
+                    <mat-form-field class="edit-post-field">
+                        <input matInput placeholder="Id" name="id" formControlName="id">
+                    </mat-form-field>
+                    <datetime-picker class="edit-post-field" namePrefix="When created" name="whenCreated" formControlName="whenCreated"></datetime-picker>
+                </div>
+
+            </form>
+        </div>
+        <div *ngSwitchCase="TabEnum.Markdown" class="tab-body post-content">
+            <textarea class="post-content__textarea" placeholder="Write dank janx" name="postContent" [(ngModel)]="content"></textarea>
+        </div>
+        <div *ngSwitchCase="TabEnum.MarkdownPreview" class="tab-body">
+            <markdown-preview [markdown]="content"></markdown-preview>
+        </div>
+    </div>
+
+
+    <div *ngSwitchCase="StateEnum.Loading" class="loading responsive-container">
+        Loading...
+    </div>
+
+</div>
+
+<div class="bottom-bar">
+    <div class="bottom-bar-inner responsive-container">
+        <span class="bottom-bar-item" style="color: rgba(0,0,0,0.5)">{{savingText}}</span>
+        <button mat-button class="bottom-bar-item" [disabled]="state !== StateEnum.Normal" (click)="savePost()"> SAVE </button>
+        <button mat-button class="bottom-bar-item" [disabled]="state !== StateEnum.Normal" (click)="closeEditPost()">CANCEL</button>
+    </div>
+</div>

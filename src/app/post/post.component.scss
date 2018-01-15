@@ -1,0 +1,49 @@
+@import "../styles/helpers";
+@import "../styles/base";
+
+:host {
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.post {
+    margin-top: $title-bar-height + 1rem;
+    flex: 1 1 0%;
+    width: 100%;
+    padding: 20px;
+
+    display: flex;
+    justify-content: center;
+
+    &__inner {
+        @extend .responsive-container;
+    }
+}
+
+.post-content {
+    position: relative;
+
+    &__admin-tools {
+        position: absolute;
+        top: 0%;
+        right: 0%;
+
+        @include if-larger-than-mobile() {
+            right: unset;
+            left: 100%;
+        }
+    }
+
+    &__admin-tool {
+        padding: 1rem;
+        color: black;
+        font-size: 1.5rem;
+        text-shadow: 0px 0px 8px white;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}

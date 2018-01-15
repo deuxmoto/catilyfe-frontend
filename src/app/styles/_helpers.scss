@@ -1,0 +1,74 @@
+// Modular scale units
+$scale-unit-sm: 1.25; // major third
+$scale-unit-lg: 1.5; // perfect fifth
+
+// Breakpoints
+$bp-sm: 48rem;
+$bp-md: 64rem;
+$bp-lg: 75rem;
+$bp-form: 35rem;
+@mixin if-larger-than($bp) {
+    @media screen and (min-width: $bp) {
+        @content;
+    }
+}
+@mixin if-larger-than-mobile() {
+    @media screen and (min-width: $bp-sm) {
+        @content;
+    }
+}
+@mixin form-width() {
+    width: $bp-form;
+    max-width: $bp-form;
+}
+
+// Colors
+$color-primary: #00d169;
+
+// Font styles
+$font-size-base: 1rem;
+@function pow($base, $pow) {
+    /* Math power function, only supports whole, non-zero exponents */
+    @return if(
+        $pow < 0,
+        1 / pow($base, -$pow),
+        if($pow <= 1, $base, pow($base * $base, $pow - 1))
+    );
+}
+@mixin scale-font-size($scaleAmount) {
+    font-size: $font-size-base * pow($scale-unit-sm, $scaleAmount);
+
+    @include if-larger-than-mobile() {
+        font-size: $font-size-base * pow($scale-unit-lg, $scaleAmount);
+    }
+}
+
+@mixin font-size-base() {
+    font-size: $font-size-base;
+}
+@mixin font-size-sm() {
+    @include scale-font-size(-1);
+}
+@mixin font-size-md() {
+    @include scale-font-size(1);
+}
+@mixin font-size-lg() {
+    @include scale-font-size(2);
+}
+@mixin font-size-xl() {
+    @include scale-font-size(3);
+}
+@mixin font-size-2xl() {
+    @include scale-font-size(4);
+}
+@mixin lobster-font() {
+    font-family: "Lobster", cursive;
+    font-weight: 300;
+    line-height: 1.25em;
+}
+
+// Title bar shared style
+$title-bar-height: 4rem;
+@mixin using-title-bar($additionalPadding: 1rem) {
+    padding-top: $title-bar-height + $additionalPadding;
+}
