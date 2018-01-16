@@ -1,23 +1,29 @@
+#!/bin/bash
+set -e # stop on errors
+
 deployFolder="./catilyfe-frontend-deployment"
 deployRepo="git@github.com:deuxmoto/catilyfe-frontend-deployment.git"
 
+if [ ! $TRAVIS ]; then
+    echo "Deploy script needs to be run by Travis CI. Aborting."
+    exit
+fi
+
 if [ ! -d "$deployFolder" ]; then
-    (>&2 echo "The dist repo '$deployFolder' doesn't exist! Attempting to clone into it...")
+    printf "The dist repo '$deployFolder' doesn't exist! Attempting to clone into it...\n"
     git clone "$deployRepo"
 fi
 
-# Remove all existing dist files
+# Remove all existing deployment files
 cd "$deployFolder"
-git rm -r ./*
+git rm -r ./* --ignore-unmatch
 cd ..
-echo "Done removing dist"
+printf "Finished removing existing deployment files.\n\n"
 
 # Build n copy janx
-if ! ng build --target production; then
-    exit
-fi
+ng build --target production
 cp -r ../dist/* "$deployFolder"
-echo "Done building n copying janx"
+printf "Build finished and out files copied to deployment folder.\n"
 
 # Add and commit to deployment repo
 cd "$deployFolder"
@@ -25,3 +31,5 @@ git add .
 git commit -m "Deploy janx"
 git push
 cd ..
+
+printf "Deployment finished!"
