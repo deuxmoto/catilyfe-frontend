@@ -6,7 +6,7 @@ node_js:
     - "8"
 
 install:
-    - npm install @angular/cli
+    - yarn
 
 before_script:
     - openssl aes-256-cbc -K $encrypted_b7491ecaf904_key -iv $encrypted_b7491ecaf904_iv -in ./deploy/travis_rsa.tar.enc -out ./deploy/travis_rsa.tar -d
