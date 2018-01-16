@@ -13,6 +13,7 @@ before_script:
     - cp ./travis_rsa ~/.ssh/id_rsa
     - cp ./travis_rsa.pub ~/.ssh/id_rsa.pub
     - sudo chmod 600 ~/.ssh/*
+    - eval `ssh-agent -s`
     - ssh-add ~/.ssh/id_rsa
 
 script: # no tests yet...maybe one day
