@@ -8,8 +8,10 @@ node_js:
 install: true # no installation step yet
 
 before_script:
-    - echo -e $TRAVIS_RSA_PUB > ~/.ssh/id_rsa.pub
-    - echo -e $TRAVIS_RSA > ~/.ssh/id_rsa
+    - openssl aes-256-cbc -K $encrypted_b7491ecaf904_key -iv $encrypted_b7491ecaf904_iv -in travis_rsa.enc -out travis_rsa -d
+    - openssl aes-256-cbc -K $encrypted_b7491ecaf904_key -iv $encrypted_b7491ecaf904_iv -in travis_rsa.pub.enc -out travis_rsa.pub -d
+    - cp ./travis_rsa > ~/.ssh/id_rsa
+    - cp ./travis_rsa.pub > ~/.ssh/id_rsa.pub
     - sudo chmod 600 ~/.ssh/*
     - ssh-add ~/.ssh/id_rsa
 
