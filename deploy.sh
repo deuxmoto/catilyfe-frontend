@@ -21,7 +21,7 @@ cd ..
 printf "Finished removing existing deployment files.\n\n"
 
 # Build n copy janx
-ng build --target production
+./node_modules/@angular/cli/bin/ng build --target production
 cp -r ./dist/* "$deployFolder"
 printf "Build finished and out files copied to deployment folder.\n"
 
