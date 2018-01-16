@@ -7,6 +7,12 @@ node_js:
 
 install: true # no installation step yet
 
+before_script:
+    - echo -e $TRAVIS_RSA_PUB > ~/.ssh/id_rsa.pub
+    - echo -e $TRAVIS_RSA > ~/.ssh/id_rsa
+    - sudo chmod 600 ~/.ssh/*
+    - ssh-add ~/.ssh/id_rsa
+
 script: # no tests yet...maybe one day
     - ./deploy.sh
 
