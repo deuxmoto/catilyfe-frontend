@@ -22,7 +22,7 @@ printf "Finished removing existing deployment files.\n\n"
 
 # Build n copy janx
 ng build --target production
-cp -r ../dist/* "$deployFolder"
+cp -r ./dist/* "$deployFolder"
 printf "Build finished and out files copied to deployment folder.\n"
 
 # Add and commit to deployment repo

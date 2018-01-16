@@ -8,7 +8,7 @@ node_js:
 install: true # no installation step yet
 
 script: # no tests yet...maybe one day
-    - cd ./deploy && ./deploy.sh
+    - ./deploy.sh
 
 after_success:
     - echo "Deployment success"
