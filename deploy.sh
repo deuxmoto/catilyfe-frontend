@@ -28,7 +28,7 @@ printf "Build finished and out files copied to deployment folder.\n"
 # Add and commit to deployment repo
 cd "$deployFolder"
 git add .
-git commit -m "Deploy janx"
+git commit -m "DEPLOY: $TRAVIS_COMMIT_MESSAGE"
 git push
 cd ..
 
