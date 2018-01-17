@@ -3,7 +3,7 @@
     <div class="post-preview__info post-info">
         <a class="post-info__title" [routerLink]="post.postUri">{{post.metadata.title}}</a>
         <div class="post-info__date-author">
-            <span>By: Someone</span>
+            <span>By: {{post.metadata.author}}</span>
             <span> | </span>
             <span>{{post.metadata.whenPublished | date:"MMMM d, y - h:mma"}}</span>
         </div>
