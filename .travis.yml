@@ -23,7 +23,7 @@ before_script:
 
 script: # no tests yet...maybe one day
     - cd ./deploy
-    - ./deploy.sh
+    - ./deploy.js
 
 after_success:
     - echo "Deployment success"
