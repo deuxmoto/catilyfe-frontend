@@ -22,8 +22,7 @@ before_script:
     - git config user.email "deuxmotoautomation@gmail.com"
 
 script: # no tests yet...maybe one day
-    - cd ./deploy
-    - ./deploy.js
+    - cd ./deploy && ./deploy.js
 
 after_success:
     - echo "Deployment success"
