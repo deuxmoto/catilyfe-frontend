@@ -15,7 +15,9 @@ function executeCommand(command, throwOnFailure=true) {
         console.error(`STATUS: ${result.status}`);
         console.error(`STDERR: ${result.stderr}`);
         console.error(`ERROR: ${result.error}`);
-        throw result.stderr || result.error || result.stdio;
+        console.error(`STDIO: ${result.stdio}`);
+        console.error(`OUTPUT: ${result.output}`);
+        throw result.stderr || result.error || result.stdio || result.output;
     }
 
     return result;
