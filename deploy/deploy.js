@@ -3,7 +3,7 @@ const chalk = require("chalk");
 const cp = require("child_process");
 const fs = require("fs");
 
-const deployFolder = "./cl-deploy";
+const deployFolder = "cl-deploy";
 const deployRepo = "git@github.com:deuxmoto/catilyfe-frontend-deployment.git";
 
 function executeCommand(command, throwOnFailure=true) {
@@ -37,18 +37,21 @@ if (!fs.existsSync(`${deployFolder}`)) {
     executeCommand(`git clone ${deployRepo} ${deployFolder}`);
 }
 
+console.log("[Diagnostics] Current location:");
+executeCommand("ls -al");
+
 // Remove all existing deployed files
-console.log(chalk.blue("\nRemoving existing deployment files..."));
+console.log("\nRemoving existing deployment files...");
 executeCommand(`cd ${deployFolder}`);
 executeCommand("git rm -r ./* --ignore-unmatch");
 executeCommand("cd ..");
 
 // Build and copy janx
-console.log(chalk.blue("\nBuilding project with production flag set..."));
+console.log("\nBuilding project with production flag set...");
 executeCommand(`${process.env.TRAVIS_BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production --output-path ./${deployFolder}`);
 
 // Add and commit to deployment repo
-console.log(chalk.blue("\nDeploying updated files..."));
+console.log("\nDeploying updated files...");
 executeCommand(`cd ${deployFolder}`);
 executeCommand("git add .");
 const commitResult = executeCommand(`git commit -m "DEPLOY: ${process.env.TRAVIS_COMMIT_MESSAGE}`, false);
