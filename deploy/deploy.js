@@ -31,30 +31,25 @@ console.log(`
   Event type: ${process.env.TRAVIS_EVENT_TYPE}
 `);
 
-// Clone the frontend deploy repo
+// Clone the frontend deploy repo and navigate to it
 if (!fs.existsSync(`${deployFolder}`)) {
     console.log(chalk.blue(`The deploy folder '${deployFolder}' doesn't exist! Attempting to clone into the repo...`));
     executeCommand(`git clone ${deployRepo} ${deployFolder}`);
 }
-
-console.log("[Diagnostics] Current location:");
-executeCommand("ls -al");
+process.chdir(deployFolder);
 
 // Remove all existing deployed files
 console.log("\nRemoving existing deployment files...");
-executeCommand(`cd ${deployFolder}`);
 executeCommand("git rm -r ./* --ignore-unmatch");
-executeCommand("cd ..");
 
 // Build and copy janx
 console.log("\nBuilding project with production flag set...");
-executeCommand(`${process.env.TRAVIS_BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production --output-path ./${deployFolder}`);
+executeCommand(`${process.env.TRAVIS_BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production --output-path .`);
 
 // Add and commit to deployment repo
 console.log("\nDeploying updated files...");
-executeCommand(`cd ${deployFolder}`);
 executeCommand("git add .");
-const commitResult = executeCommand(`git commit -m "DEPLOY: ${process.env.TRAVIS_COMMIT_MESSAGE}`, false);
+const commitResult = executeCommand(`git commit -m "DEPLOY: ${process.env.TRAVIS_COMMIT_MESSAGE}"`, false);
 if (commitResult.status === 0) {
     // Only execute if commit succeeded (if no files changed, then commit would fail)
     executeCommand("git push");
