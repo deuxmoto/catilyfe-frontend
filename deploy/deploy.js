@@ -13,6 +13,8 @@ function executeCommand(command) {
     });
 }
 
+console.log(process.env);
+
 // Ensure we're running in Travis
 if (!process.env.$TRAVIS) {
     console.log(chalk.red("Deploy script needs to be run by Travis CI. Aborting."));
