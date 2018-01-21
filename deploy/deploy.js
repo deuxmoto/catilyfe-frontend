@@ -12,7 +12,10 @@ function executeCommand(command, throwOnFailure=true) {
         shell: true
     });
     if (throwOnFailure && (result.status !== 0 || result.error)) {
-        throw result.stderr || result.error || result.output;
+        console.error(`STATUS: ${result.status}`);
+        console.error(`STDERR: ${result.stderr}`);
+        console.error(`ERROR: ${result.error}`);
+        throw result.stderr || result.error || result.stdio;
     }
 
     return result;
