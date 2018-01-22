@@ -54,7 +54,7 @@ function deployOther() {
 
     // Add azure website
     executeCommand("git init");
-    executeCommand(`git remote add azure https://deuxmoto:${AZURE_DEPLOYMENT_PASSWORD}@catilyfe-staging.scm.azurewebsites.net:443/catilyfe.git`);
+    executeCommand(`git remote add azure https://deuxmoto:${process.env.AZURE_DEPLOYMENT_PASSWORD}@catilyfe-staging.scm.azurewebsites.net:443/catilyfe.git`);
 
     // Build and copy janx
     console.log("\nBuilding project with production flag set...");
