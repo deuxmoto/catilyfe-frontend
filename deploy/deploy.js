@@ -5,23 +5,72 @@ const fs = require("fs");
 
 const deployFolder = "cl-deploy";
 const deployRepo = "git@github.com:deuxmoto/catilyfe-frontend-deployment.git";
+const BRANCH = process.env.TRAVIS_BRANCH;
+const BUILD_DIR = process.env.TRAVIS_BUILD_DIR;
+const COMMIT_MESSAGE = process.env.TRAVIS_COMMIT_MESSAGE;
 
-function executeCommand(command, throwOnFailure=true) {
+function executeCommand(command, throwOnFailure = true) {
     const result = cp.spawnSync(command, {
         stdio: "inherit",
         shell: true
     });
     if (throwOnFailure && (result.status !== 0 || result.error)) {
-        console.error(`STATUS: ${result.status}`);
-        console.error(`STDERR: ${result.stderr}`);
-        console.error(`ERROR: ${result.error}`);
-        console.error(`STDIO: ${result.stdio}`);
-        console.error(`OUTPUT: ${result.output}`);
         throw result.stderr || result.error || result.stdio || result.output;
     }
 
     return result;
 }
+
+function deployMaster() {
+    // Clone the frontend deploy repo and navigate to it
+    if (!fs.existsSync(`${deployFolder}`)) {
+        console.log(chalk.blue(`The deploy folder '${deployFolder}' doesn't exist! Attempting to clone into the repo...`));
+        executeCommand(`git clone ${deployRepo} ${deployFolder}`);
+    }
+    process.chdir(deployFolder);
+
+    // Remove all existing deployed files
+    console.log("\nRemoving existing deployment files...");
+    executeCommand("git rm -r ./* --ignore-unmatch");
+
+    // Build and copy janx
+    console.log("\nBuilding project with production flag set...");
+    executeCommand(`${BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production`);
+    executeCommand(`cp -r ${BUILD_DIR}/dist/* ./`);
+
+    // Add and commit to deployment repo
+    console.log("\nDeploying updated files...");
+    executeCommand("git add .");
+    const commitResult = executeCommand(`git commit -m "DEPLOY: ${COMMIT_MESSAGE}"`, false);
+    if (commitResult.status === 0) {
+        // Only execute if commit succeeded (if no files changed, then commit would fail)
+        executeCommand("git push");
+    }
+}
+
+function deployOther() {
+    fs.mkdirSync(deployFolder);
+    process.chdir(deployFolder);
+
+    // Add azure website
+    executeCommand("git init");
+    executeCommand(`git remote add azure https://deuxmoto:${AZURE_DEPLOYMENT_PASSWORD}@catilyfe-staging.scm.azurewebsites.net:443/catilyfe.git`);
+
+    // Build and copy janx
+    console.log("\nBuilding project with production flag set...");
+    executeCommand(`${BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production`);
+    executeCommand(`cp -r ${BUILD_DIR}/dist/* ./`);
+
+    // Add and commit to deployment repo
+    console.log("\nDeploying updated files...");
+    executeCommand("git add .");
+    const commitResult = executeCommand(`git commit -m "DEPLOY: ${COMMIT_MESSAGE}"`, false);
+    if (commitResult.status === 0) {
+        // Only execute if commit succeeded (if no files changed, then commit would fail)
+        executeCommand("git push azure master");
+    }
+}
+
 
 // Ensure we're running in Travis
 if (!process.env.TRAVIS) {
@@ -36,27 +85,9 @@ console.log(`
   Event type: ${process.env.TRAVIS_EVENT_TYPE}
 `);
 
-// Clone the frontend deploy repo and navigate to it
-if (!fs.existsSync(`${deployFolder}`)) {
-    console.log(chalk.blue(`The deploy folder '${deployFolder}' doesn't exist! Attempting to clone into the repo...`));
-    executeCommand(`git clone ${deployRepo} ${deployFolder}`);
+if (process.env.TRAVIS_BRANCH.toLowerCase() === "master") {
+    deployMaster();
 }
-process.chdir(deployFolder);
-
-// Remove all existing deployed files
-console.log("\nRemoving existing deployment files...");
-executeCommand("git rm -r ./* --ignore-unmatch");
-
-// Build and copy janx
-console.log("\nBuilding project with production flag set...");
-executeCommand(`${process.env.TRAVIS_BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production`);
-executeCommand(`cp -r ${process.env.TRAVIS_BUILD_DIR}/dist/* ./`);
-
-// Add and commit to deployment repo
-console.log("\nDeploying updated files...");
-executeCommand("git add .");
-const commitResult = executeCommand(`git commit -m "DEPLOY: ${process.env.TRAVIS_COMMIT_MESSAGE}"`, false);
-if (commitResult.status === 0) {
-    // Only execute if commit succeeded (if no files changed, then commit would fail)
-    executeCommand("git push");
+else {
+    deployOther();
 }
