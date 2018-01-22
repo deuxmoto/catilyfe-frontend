@@ -49,7 +49,8 @@ executeCommand("git rm -r ./* --ignore-unmatch");
 
 // Build and copy janx
 console.log("\nBuilding project with production flag set...");
-executeCommand(`${process.env.TRAVIS_BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production --output-path .`);
+executeCommand(`${process.env.TRAVIS_BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production`);
+executeCommand(`cp -r ${process.env.TRAVIS_BUILD_DIR}/dist/* ./`);
 
 // Add and commit to deployment repo
 console.log("\nDeploying updated files...");
