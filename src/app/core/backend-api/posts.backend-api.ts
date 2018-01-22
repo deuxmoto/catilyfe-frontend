@@ -7,6 +7,17 @@ import "rxjs/add/observable/throw";
 import * as Constants from "./constants";
 import * as Errors from "./errors";
 
+// I AM ADDING A LONG ASS comment
+// BECAUSE JUSTIN SUCKS
+// AND HATES COMMENTS
+// YEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+/*
+                                             __ 
+  _________  ____ ___  ____ ___  ___  ____  / /_
+ / ___/ __ \/ __ `__ \/ __ `__ \/ _ \/ __ \/ __/
+/ /__/ /_/ / / / / / / / / / / /  __/ / / / /_  
+\___/\____/_/ /_/ /_/_/ /_/ /_/\___/_/ /_/\__/  
+*/
 export interface AuthorInfo {
     name: string;
     userId: number;
