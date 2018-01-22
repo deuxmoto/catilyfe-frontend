@@ -7,7 +7,6 @@ import "rxjs/add/observable/throw";
 import * as Constants from "./constants";
 import * as Errors from "./errors";
 
-// AUTHOR INFO
 export interface AuthorInfo {
     name: string;
     userId: number;
