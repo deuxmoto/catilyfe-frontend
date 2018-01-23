@@ -69,7 +69,7 @@ function deployOther() {
     const commitResult = executeCommand(`git commit -m "DEPLOY: ${COMMIT_MESSAGE}"`, false);
     if (commitResult.status === 0) {
         // Only execute if commit succeeded (if no files changed, then commit would fail)
-        executeCommand("git push azure master");
+        executeCommand("git push -v azure master");
     }
 }
 
@@ -88,7 +88,7 @@ console.log(`
 
 // Set Azure deployment credentials
 console.log("\nSaving git credentials...");
-fs.appendFileSync(".git-credentials", `echo https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-staging.scm.azurewebsites.net`);
+fs.appendFileSync(".git-credentials", `https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-staging.scm.azurewebsites.net`);
 executeCommand("git config credential.helper store --file=./.git-credentials");
 
 if (process.env.TRAVIS_BRANCH.toLowerCase() === "master") {
