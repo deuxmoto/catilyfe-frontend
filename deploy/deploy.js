@@ -5,6 +5,8 @@ const fs = require("fs");
 
 const deployFolder = "cl-deploy";
 const deployRepo = "git@github.com:deuxmoto/catilyfe-frontend-deployment.git";
+const DEPLOY_USERNAME = process.env.AZURE_DEPLOYMENT_USERNAME;
+const DEPLOY_PASSWORD = process.env.AZURE_DEPLOYMENT_PASSWORD;
 const BRANCH = process.env.TRAVIS_BRANCH;
 const BUILD_DIR = process.env.TRAVIS_BUILD_DIR;
 const COMMIT_MESSAGE = process.env.TRAVIS_COMMIT_MESSAGE;
@@ -54,7 +56,7 @@ function deployOther() {
 
     // Add azure website
     executeCommand("git init");
-    executeCommand(`git remote add azure https://deuxmoto:${process.env.AZURE_DEPLOYMENT_PASSWORD}@catilyfe-staging.scm.azurewebsites.net:443/catilyfe.git`);
+    executeCommand(`git remote add azure https://${DEPLOY_USERNAME}@catilyfe-staging.scm.azurewebsites.net:443/catilyfe.git`);
 
     // Build and copy janx
     console.log("\nBuilding project with production flag set...");
@@ -71,7 +73,6 @@ function deployOther() {
     }
 }
 
-
 // Ensure we're running in Travis
 if (!process.env.TRAVIS) {
     console.log(chalk.red("Deploy script needs to be run by Travis CI. Aborting."));
@@ -84,6 +85,11 @@ console.log(`
   Commit message: ${process.env.TRAVIS_COMMIT_MESSAGE}
   Event type: ${process.env.TRAVIS_EVENT_TYPE}
 `);
+
+// Set Azure deployment credentials
+console.log("\nSaving git credentials...");
+fs.appendFileSync(".git-credentials", `echo https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-staging.scm.azurewebsites.net`);
+executeCommand("git config credential.helper store --file=./.git-credentials");
 
 if (process.env.TRAVIS_BRANCH.toLowerCase() === "master") {
     deployMaster();
