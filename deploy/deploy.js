@@ -3,13 +3,20 @@ const chalk = require("chalk");
 const cp = require("child_process");
 const fs = require("fs");
 
-const deployFolder = "cl-deploy";
-const deployRepo = "git@github.com:deuxmoto/catilyfe-frontend-deployment.git";
+// Captured environment variables
 const DEPLOY_USERNAME = process.env.AZURE_DEPLOYMENT_USERNAME;
 const DEPLOY_PASSWORD = process.env.AZURE_DEPLOYMENT_PASSWORD;
 const BRANCH = process.env.TRAVIS_BRANCH;
 const BUILD_DIR = process.env.TRAVIS_BUILD_DIR;
-const COMMIT_MESSAGE = process.env.TRAVIS_COMMIT_MESSAGE;
+const COMMIT_MESSAGE = process.env.TRAVIS_COMMIT_MESSAGE || "No commit message provided";
+
+const deployFolder = "cl-deploy";
+const deployRegex = /\[deploy:\s*(\w+)\]/i;
+const masterDeploymentUrl = `https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe.scm.azurewebsites.net:443/catilyfe.git`;
+const otherDeploymentUrls = {
+    justin: `https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-justin.scm.azurewebsites.net:443/catilyfe.git`,
+    peter: `https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-peta.scm.azurewebsites.net:443/catilyfe.git`
+};
 
 // Ensure we're running in Travis
 if (!process.env.TRAVIS) {
@@ -24,16 +31,21 @@ console.log(`
   Event type: ${process.env.TRAVIS_EVENT_TYPE}
 `);
 
-// Set Azure deployment credentials
-// console.log("\nSaving git credentials...");
-// fs.appendFileSync(".git-credentials", `https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-staging.scm.azurewebsites.net`);
-// executeCommand("git config credential.helper store --file=./.git-credentials");
-
+let deployParams;
 if (process.env.TRAVIS_BRANCH.toLowerCase() === "master") {
-    deployMaster();
+    deployToAzure(masterDeploymentUrl);
+}
+else if (deployParams = COMMIT_MESSAGE.match(deployRegex)) {
+    const deployName = deployParams[1];
+    const slotUrl = otherDeploymentUrls[deployName];
+    if (!slotUrl) {
+        console.error(chalk.red(`Invalid deploy name '${deployName}'. Valid names are: ${Object.keys(otherDeploymentUrls).join(",")}`));
+    }
+
+    deployToAzure(slotUrl);
 }
 else {
-    deployOther();
+    console.log("Skipping deployment. Not on master or given deploy command.");
 }
 
 function executeCommand(command, throwOnFailure = true) {
@@ -48,40 +60,13 @@ function executeCommand(command, throwOnFailure = true) {
     return result;
 }
 
-function deployMaster() {
-    // Clone the frontend deploy repo and navigate to it
-    if (!fs.existsSync(`${deployFolder}`)) {
-        console.log(chalk.blue(`The deploy folder '${deployFolder}' doesn't exist! Attempting to clone into the repo...`));
-        executeCommand(`git clone ${deployRepo} ${deployFolder}`);
-    }
-    process.chdir(deployFolder);
-
-    // Remove all existing deployed files
-    console.log("\nRemoving existing deployment files...");
-    executeCommand("git rm -r ./* --ignore-unmatch");
-
-    // Build and copy janx
-    console.log("\nBuilding project with production flag set...");
-    executeCommand(`${BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production`);
-    executeCommand(`cp -r ${BUILD_DIR}/dist/* ./`);
-
-    // Add and commit to deployment repo
-    console.log("\nDeploying updated files...");
-    executeCommand("git add .");
-    const commitResult = executeCommand(`git commit -m "DEPLOY: ${COMMIT_MESSAGE}"`, false);
-    if (commitResult.status === 0) {
-        // Only execute if commit succeeded (if no files changed, then commit would fail)
-        executeCommand("git push");
-    }
-}
-
-function deployOther() {
+function deployToAzure(url) {
     fs.mkdirSync(deployFolder);
     process.chdir(deployFolder);
 
     // Add azure website
     executeCommand("git init");
-    executeCommand(`git remote add azure https://${DEPLOY_USERNAME}:${DEPLOY_PASSWORD}@catilyfe-staging.scm.azurewebsites.net:443/catilyfe.git`);
+    executeCommand(`git remote add azure ${url}`);
 
     // Build and copy janx
     console.log("\nBuilding project with production flag set...");
@@ -97,5 +82,3 @@ function deployOther() {
         executeCommand("git push -v azure master");
     }
 }
-
-
