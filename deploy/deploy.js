@@ -8,7 +8,7 @@ const DEPLOY_USERNAME = process.env.AZURE_DEPLOYMENT_USERNAME;
 const DEPLOY_PASSWORD = process.env.AZURE_DEPLOYMENT_PASSWORD;
 const BRANCH = process.env.TRAVIS_BRANCH;
 const BUILD_DIR = process.env.TRAVIS_BUILD_DIR;
-const COMMIT_MESSAGE = process.env.TRAVIS_COMMIT_MESSAGE || "No commit message provided";
+const COMMIT_MESSAGE = process.env.TRAVIS_COMMIT_MESSAGE.split("\n")[0] || "No commit message provided";
 
 const deployFolder = "cl-deploy";
 const deployRegex = /\[deploy:\s*(\w+)\]/i;
