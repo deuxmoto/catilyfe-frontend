@@ -79,6 +79,6 @@ function deployToAzure(url) {
     const commitResult = executeCommand(`git commit -m "DEPLOY: ${COMMIT_MESSAGE}"`, false);
     if (commitResult.status === 0) {
         // Only execute if commit succeeded (if no files changed, then commit would fail)
-        executeCommand("git push -v azure master");
+        executeCommand("git push -f azure master");
     }
 }
