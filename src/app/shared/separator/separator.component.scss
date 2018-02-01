@@ -1,0 +1,23 @@
+@import "../../styles/helpers";
+
+.space {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+
+    &.sm {
+        @include margin-sm();
+    }
+    &.md {
+        @include margin-md();
+    }
+    &.lg {
+        @include margin-lg();
+    }
+}
+
+.line {
+    height: 1px;
+    width: 6rem;
+    background-color: rgba(0, 0, 0, 0.2);
+}

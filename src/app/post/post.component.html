@@ -3,6 +3,15 @@
 <div class="post" [ngSwitch]="state">
     <div class="post__inner">
         <div class="post-content" *ngSwitchCase="'normal'">
+            <div class="post-metadata">
+                <h3 class="post-metadata__title">{{post.metadata.title}}</h3>
+                <div class="post-metadata__info">
+                    <span>By: {{post.metadata.author.name}}</span>
+                    <span> | </span>
+                    <span>{{post.metadata.whenPublished | date:"MMMM d, y - h:mma"}}</span>
+                </div>
+            </div>
+            <separator></separator>
             <div class="markdown-body" [innerHtml]="postHtml"></div>
             <div class="post-content__admin-tools" *ngIf="isUserAdmin">
                 <a class="post-content__admin-tool fa fa-pencil" [routerLink]="editPostUrl"></a>

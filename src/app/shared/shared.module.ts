@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 
 import { FooterComponent } from "./footer/footer.component";
 import { PostPreviewComponent } from "./post-preview/post-preview.component";
+import { SeparatorComponent } from "./separator/separator.component";
 import { TitleBarComponent } from "./title-bar/title-bar.component";
 import { TitleBarService } from "./title-bar/title-bar.service";
 import { TitleBarMenuComponent } from "./title-bar/title-bar-menu/title-bar-menu.component";
@@ -17,12 +18,14 @@ import { TitleBarMenuComponent } from "./title-bar/title-bar-menu/title-bar-menu
     declarations: [
         FooterComponent,
         PostPreviewComponent,
+        SeparatorComponent,
         TitleBarComponent,
         TitleBarMenuComponent
     ],
     exports: [
         FooterComponent,
         PostPreviewComponent,
+        SeparatorComponent,
         TitleBarComponent,
         CommonModule,
         FormsModule,

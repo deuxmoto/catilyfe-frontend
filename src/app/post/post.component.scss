@@ -22,6 +22,27 @@
     }
 }
 
+.post-metadata {
+    text-align: center;
+
+    &__title {
+        @include font-size-xl;
+        @include title-font;
+        margin: 0 0 0.15em;
+        word-wrap: break-word;
+    }
+
+    &__info {
+        font-size: 0.8rem;
+        color: rgb(100, 100, 100);
+        font-weight: bold;
+
+        @include if-larger-than-mobile() {
+            font-size: 1rem;
+        }
+    }
+}
+
 .post-content {
     position: relative;
 
