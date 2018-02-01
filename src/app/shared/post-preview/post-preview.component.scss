@@ -25,8 +25,8 @@
 
 .post-info {
     &__title {
-        @include lobster-font();
-        @include font-size-lg();
+        @include title-font;
+        @include font-size-lg;
         color: black;
         display: block;
         word-wrap: break-word;

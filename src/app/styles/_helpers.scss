@@ -27,12 +27,13 @@ $color-primary: #00d169;
 
 // Font styles
 $font-size-base: 1rem;
-@function pow($base, $pow) {
+@function pow($base, $pow, $accumulator: null) {
     /* Math power function, only supports whole, non-zero exponents */
+    $accumulator: $base !default;
     @return if(
         $pow < 0,
         1 / pow($base, -$pow),
-        if($pow <= 1, $base, pow($base * $base, $pow - 1))
+        if($pow <= 1, $accumulator, pow($base, $pow - 1, $base * $accumulator))
     );
 }
 @mixin scale-font-size($scaleAmount) {
@@ -61,10 +62,55 @@ $font-size-base: 1rem;
 @mixin font-size-2xl() {
     @include scale-font-size(4);
 }
+
+@mixin title-font() {
+    font-weight: 700;
+    line-height: 1.25em;
+}
 @mixin lobster-font() {
     font-family: "Lobster", cursive;
     font-weight: 300;
     line-height: 1.25em;
+}
+
+// Margins
+$margin-size-base: 1rem;
+@mixin margin($size, $sides) {
+    $all: if($sides, false, true);
+    $top: if(index($sides, top) != null, $size, 0);
+    $right: if(index($sides, right) != null, $size, 0);
+    $bottom: if(index($sides, bottom) != null, $size, 0);
+    $left: if(index($sides, left) != null, $size, 0);
+
+    @if ($all) { // Can we simplify to one margin value (top/right/bottom/left)
+        margin: $size;
+    } @else if ($top == $bottom and $left == $right) { // Can we simplify to two margin values (top/bottom left/right)
+        margin: $top $right;
+    } @else if ($left == $right) { // Can we simplify to three margin values (top right/left bottom)
+        margin: $top $right $bottom;
+    } @else {
+        margin: $top $right $bottom $left;
+    }
+}
+@mixin scale-margin($scaleAmount, $sides) {
+    $smSize: $margin-size-base * pow($scale-unit-sm, $scaleAmount);
+    $lgSize: $margin-size-base * pow($scale-unit-lg, $scaleAmount);
+
+    @include margin($smSize, $sides);
+
+    @include if-larger-than-mobile() {
+        @include margin($lgSize, $sides);
+    }
+}
+
+@mixin margin-sm($sides: null) {
+    @include scale-margin(-1, $sides);
+}
+@mixin margin-md($sides: null) {
+    @include scale-margin(1, $sides);
+}
+@mixin margin-lg($sides: null) {
+    @include scale-margin(2, $sides);
 }
 
 // Title bar shared style
