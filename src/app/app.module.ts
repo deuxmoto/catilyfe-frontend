@@ -2,7 +2,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from "@angular/core";
 import { HttpModule } from "@angular/http";
-import { MatButtonModule, MatCardModule, MatInputModule } from "@angular/material";
+import { MatButtonModule, MatCardModule, MatInputModule, MatSelectModule } from "@angular/material";
 import { Route, RouterModule } from "@angular/router";
 
 import { AppComponent } from "./app.component";
@@ -12,6 +12,7 @@ import { CoreModule } from "./core/core.module";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
 import { PostComponent } from "./post/post.component";
+import { TopicsComponent } from "./topics/topics.component";
 import { TestPageComponent } from "./testpage/testpage.component";
 import { SharedModule } from "./shared/shared.module";
 
@@ -31,6 +32,10 @@ const routes: Route[] = [
     {
         path: "notfound",
         component: NotFoundComponent
+    },
+    {
+        path: "topics",
+        component: TopicsComponent
     },
     {
         path: "testpage",
@@ -53,6 +58,7 @@ const routes: Route[] = [
         LoginComponent,
         NotFoundComponent,
         PostComponent,
+        TopicsComponent,
         TestPageComponent
     ],
     imports: [
@@ -65,6 +71,7 @@ const routes: Route[] = [
         MatButtonModule,
         MatCardModule,
         MatInputModule,
+        MatSelectModule,
 
         AdminModule,
         SharedModule

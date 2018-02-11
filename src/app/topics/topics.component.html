@@ -1,0 +1,22 @@
+<title-bar></title-bar>
+
+<div class="tags">
+    <div class="responsive-container">
+        <h2 class="tags__title">Topics</h2>
+        <div class="tags__selector tag-selector">
+            <mat-form-field class="tag-selector__select">
+                <mat-placeholder>View posts about...</mat-placeholder>
+                <mat-select panelClass="tag-selector__panel" [(ngModel)]="selectedTag" (change)="onSelectedTagChange()">
+                    <mat-option  *ngFor="let tag of tags" [value]="tag">
+                        {{tag}}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="tags__posts" *ngIf="selectedTag">
+            <post-preview [tag]="selectedTag"></post-preview>
+        </div>
+    </div>
+</div>
+
+<footer></footer>

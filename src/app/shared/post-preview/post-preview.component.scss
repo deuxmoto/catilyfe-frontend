@@ -1,8 +1,20 @@
 @import "../../styles/helpers";
 
+:host {
+    min-height: 300px;
+}
+
 .post-preview {
     padding: 1.5rem 0;
     width: 100%;
+
+    &:first-child {
+        padding-top: 0;
+    }
+
+    &:last-child {
+        padding-bottom: 0;
+    }
 
     &__image {
         width: 100%;
@@ -44,7 +56,7 @@
 }
 
 .post-body {
-    max-height: 200px;
+    max-height: 300px;
     display: flex;
     flex-direction: column;
 
@@ -98,4 +110,8 @@
             background-color: $readmore-color;
         }
     }
+}
+
+.loading {
+    text-align: center;
 }

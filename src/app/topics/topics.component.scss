@@ -1,0 +1,45 @@
+@import "../styles/helpers";
+
+:host {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.tags {
+    margin-top: $title-bar-height + 1rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+
+    &__title {
+        @include font-size-xl;
+        margin: 0 0 0.5em;
+        text-align: center;
+    }
+
+    &__posts {
+        margin-top: 0.5rem;
+    }
+
+    &__selector, &__posts {
+        width: 100%;
+    }
+}
+
+.tag-selector {
+    &__select {
+        @include font-size-md;
+        width: 100%;
+    }
+}
+// This is stupid, but this is how we set styles for the dropdown panel for now:
+::ng-deep .mat-select-panel.tag-selector__panel {
+    max-height: 300px;
+
+    & .mat-select-content {
+        @include font-size-base;
+    }
+}
