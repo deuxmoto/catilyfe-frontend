@@ -40,6 +40,7 @@ else if (deployParams = COMMIT_MESSAGE.match(deployRegex)) {
     const slotUrl = otherDeploymentUrls[deployName];
     if (!slotUrl) {
         console.error(chalk.red(`Invalid deploy name '${deployName}'. Valid names are: ${Object.keys(otherDeploymentUrls).join(",")}`));
+        process.exit(-1);
     }
 
     deployToAzure(slotUrl);
@@ -74,7 +75,7 @@ function deployToAzure(url) {
     executeCommand(`cp -r ${BUILD_DIR}/dist/* ./`);
 
     // Add and commit to deployment repo
-    console.log("\nDeploying updated files...");
+    console.log(`\nDeploying updated files to '${url}'...`);
     executeCommand("git add .");
     const commitResult = executeCommand(`git commit -m "DEPLOY: ${COMMIT_MESSAGE}"`, false);
     if (commitResult.status === 0) {
