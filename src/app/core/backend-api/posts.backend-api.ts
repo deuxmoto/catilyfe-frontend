@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpResponseBase, HttpErrorResponse } from "@angular/common/http";
+import { HttpClient, HttpParams } from "@angular/common/http";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/throw";
@@ -27,6 +27,18 @@ export interface Post {
     rawHtmlThenIGuess: string;
 }
 
+export interface FetchPostsOptions {
+    /**
+     * Number of posts to return.
+     */
+    top?: number;
+
+    /**
+     * Tags used to filter posts.
+     */
+    tags?: string[];
+}
+
 const parseDateObjects = (postMetadata: PostMetadata): void => {
     postMetadata.whenPublished = new Date(postMetadata.whenPublished);
 };
@@ -49,8 +61,25 @@ export class PostsBackendApi {
             });
     }
 
-    public getPosts(top = 5): Observable<Post[]> {
-        return this.http.get<Post[]>(`${Constants.Endpoint}/post?top=${top}`)
+    public getPosts(options?: FetchPostsOptions): Observable<Post[]> {
+        options = options || {};
+        const top = options.top;
+        const tags = options.tags;
+
+        // Build url parameters
+        let params = new HttpParams();
+
+        if (top) {
+            params = params.append("top", "" + top);
+        }
+
+        if (tags && tags.length) {
+            params = tags.reduce((currentParams, currentTag) => {
+                return currentTag ? params.append("tags", currentTag) : params;
+            }, params);
+        }
+
+        return this.http.get<Post[]>(`${Constants.Endpoint}/post`, { params: params })
             .map((posts) => {
                 posts.forEach((post) => {
                     parseDateObjects(post.metadata);

@@ -53,8 +53,8 @@ export class TitleBarMenuComponent implements OnInit {
                 linkUrl: "/posts/about"
             },
             {
-                text: "Posts",
-                linkUrl: "/home"
+                text: "Topics",
+                linkUrl: "/topics"
             }
         ];
 
