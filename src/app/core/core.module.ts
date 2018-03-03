@@ -7,6 +7,7 @@ import { CommonModule } from "@angular/common";
 import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
 
 import { AuthBackendApi } from "./backend-api/auth.backend-api";
+import { ImageBackendApi } from "./backend-api/image.backend-api";
 import { PostsBackendApi } from "./backend-api/posts.backend-api";
 import { TagsBackendApi } from "./backend-api/tags.backend-api";
 import { BackendApiService } from "./backend-api.service";
@@ -16,6 +17,7 @@ import { environment } from "../../environments/environment";
 const coreProviders: Provider[] = [
     AuthBackendApi,
     BackendApiService,
+    ImageBackendApi,
     PostsBackendApi,
     TagsBackendApi
 ];

@@ -1,6 +1,7 @@
 import { Location } from "@angular/common";
-import { Component, OnInit, OnDestroy, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, FormGroup, Validators, ControlValueAccessor } from "@angular/forms";
+import { MatDialog, MatDialogRef } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DataSource } from "@angular/cdk/collections";
 
@@ -9,10 +10,12 @@ import "rxjs/add/observable/fromEvent";
 import "rxjs/add/operator/map";
 
 import { MarkdownPreviewComponent } from "./markdown-preview/markdown-preview.component";
+import { UploadFileComponent } from "./upload-file/upload-file.component";
 import {
     BackendApiService, AdminPost, AdminPostMetadata,
     NotFoundError, OtherError
 } from "../../core/backend-api.service";
+import { Image } from "../../core/backend-api/image.backend-api";
 
 enum State {
     Normal,
@@ -68,11 +71,15 @@ export class EditPostComponent implements OnInit {
     ];
     public currentTab = Tab.Metadata;
 
+    @ViewChild("postContent")
+    public postContent: ElementRef;
+
     constructor(
         private backend: BackendApiService,
         private route: ActivatedRoute,
         private router: Router,
-        private location: Location
+        private location: Location,
+        private dialog: MatDialog
     ) { }
 
     public ngOnInit(): void {
@@ -181,6 +188,25 @@ export class EditPostComponent implements OnInit {
 
         this.tags.push(newTagValue);
         newTagTextBox.reset("");
+    }
+
+    public uploadImage(): void {
+        const dialogRef = this.dialog.open(UploadFileComponent);
+        dialogRef.afterClosed().subscribe((result: Image) => {
+            const markdownImageText = `![${result.description}](${result.links[0].url})`;
+            const postContentTextbox = this.postContent.nativeElement;
+
+            const cursorPosition = postContentTextbox.selectionStart;
+            const textBoxValue = postContentTextbox.value;
+            postContentTextbox.value =
+                textBoxValue.substring(0, cursorPosition)
+                + markdownImageText
+                + textBoxValue.substring(cursorPosition, textBoxValue.length);
+
+            const newCursorPosition = cursorPosition + markdownImageText.length;
+            postContentTextbox.setSelectionRange(newCursorPosition, newCursorPosition);
+            postContentTextbox.focus();
+        });
     }
 
     public closeErrorMessage(): void {
