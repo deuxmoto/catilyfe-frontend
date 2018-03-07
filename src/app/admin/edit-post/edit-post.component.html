@@ -72,7 +72,10 @@
             </form>
         </div>
         <div *ngSwitchCase="TabEnum.Markdown" class="tab-body post-content">
-            <textarea class="post-content__textarea" placeholder="Write dank janx" name="postContent" [(ngModel)]="content"></textarea>
+            <div class="post-content__header post-content-header">
+                <button mat-button (click)="uploadImage()"><i class="fas fa-image post-content-header__image"></i>Insert image</button>
+            </div>
+            <textarea #postContent class="post-content__textarea" placeholder="Write dank janx" name="postContent" [(ngModel)]="content"></textarea>
         </div>
         <div *ngSwitchCase="TabEnum.MarkdownPreview" class="tab-body">
             <markdown-preview [markdown]="content"></markdown-preview>

@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>Upload image</h2>
+<mat-dialog-content class="content">
+    <form [formGroup]="form">
+        <mat-form-field class="content__field">
+            <input matInput placeholder="Slug" formControlName="slug">
+        </mat-form-field>
+        <mat-form-field class="content__field">
+            <input matInput placeholder="Description" formControlName="description">
+        </mat-form-field>
+        <input class="content__field" type="file" (change)="setFile($event)"/>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions class="actions">
+    <button mat-button [disabled]="!formValid() || isUploading" (click)="uploadFileAndClose()">
+        <span *ngIf="!isUploading">OK</span>
+        <span *ngIf="isUploading">Uploading...</span>
+    </button>
+</mat-dialog-actions>
