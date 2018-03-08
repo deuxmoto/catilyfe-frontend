@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
+import { Meta } from '@angular/platform-browser'
+
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
@@ -8,6 +10,7 @@ import "rxjs/add/operator/catch";
 import { NotFoundError } from "../core/backend-api/errors";
 import { AuthBackendApi, isUserAdmin } from "../core/backend-api/auth.backend-api";
 import { Post, PostsBackendApi } from "../core/backend-api/posts.backend-api";
+import { Constants } from "../shared/collin";
 
 type State = "normal" | "loading";
 
@@ -26,7 +29,8 @@ export class PostComponent implements OnInit {
         private authBackend: AuthBackendApi,
         private postsBackend: PostsBackendApi,
         private route: ActivatedRoute,
-        private router: Router
+        private router: Router,
+        private meta: Meta
     ) { }
 
     public get postHtml(): string {
@@ -47,6 +51,22 @@ export class PostComponent implements OnInit {
                 (post) => {
                     this.post = post;
                     this.state = "normal";
+
+                    this.meta.addTags([
+                        { name: "tile", content: this.post.metadata.title },
+                        { name: "author", content: this.post.metadata.author.name },
+                        { name: "description", content: this.post.metadata.description },
+                        { name: "keywords", content: this.post.metadata.tags.join(",")},
+                        
+                        // Facebooks garbage. Can remove if they go under.
+                        { name: "og:title", content: this.post.metadata.title },
+                        { name: "og:type", content: "article" },
+                        { name: "og:url", content: `https://${window.location.hostname}/posts/${this.post.metadata.slug}` },
+                        { name: "og:description", content: this.post.metadata.description },
+                        { name: "og:site_name", content: Constants.SiteName },
+                        { name: "article:tag", content: this.post.metadata.tags.join(",")},
+                        { name: "article:published_time", content: this.post.metadata.whenPublished.toISOString()},
+                    ]);
                 },
                 (error) => {
                     if (error instanceof NotFoundError) {
