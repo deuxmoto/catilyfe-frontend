@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
+// For adding them meta tags.
 import { Meta } from '@angular/platform-browser'
 
 import { Observable } from "rxjs/Observable";
@@ -52,13 +53,15 @@ export class PostComponent implements OnInit {
                     this.post = post;
                     this.state = "normal";
 
+                    // All all of the meta tags to the head
                     this.meta.addTags([
+                        // Normal
                         { name: "tile", content: this.post.metadata.title },
                         { name: "author", content: this.post.metadata.author.name },
                         { name: "description", content: this.post.metadata.description },
                         { name: "keywords", content: this.post.metadata.tags.join(",")},
                         
-                        // Facebooks garbage. Can remove if they go under.
+                        // Facebooks garbage. Can remove if/when they go under.
                         { name: "og:title", content: this.post.metadata.title },
                         { name: "og:type", content: "article" },
                         { name: "og:url", content: `https://${window.location.hostname}/posts/${this.post.metadata.slug}` },
