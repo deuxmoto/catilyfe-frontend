@@ -4,7 +4,7 @@
 export class Constants{
 
     /// <summary>
-    /// The website name. Contains the value DEUXMOTO
+    /// The website name. Contains the value DEUX MOTO
     /// </summary>
-    public static readonly SiteName = "DeuxMoto";
+    public static readonly SiteName = "Deux Moto";
 }

@@ -1,8 +1,6 @@
+import { Meta, Title } from '@angular/platform-browser';
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-
-// For adding them meta tags.
-import { Meta } from '@angular/platform-browser'
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
@@ -11,7 +9,7 @@ import "rxjs/add/operator/catch";
 import { NotFoundError } from "../core/backend-api/errors";
 import { AuthBackendApi, isUserAdmin } from "../core/backend-api/auth.backend-api";
 import { Post, PostsBackendApi } from "../core/backend-api/posts.backend-api";
-import { Constants } from "../shared/collin";
+import { Constants } from "../shared/constants";
 
 type State = "normal" | "loading";
 
@@ -31,7 +29,8 @@ export class PostComponent implements OnInit {
         private postsBackend: PostsBackendApi,
         private route: ActivatedRoute,
         private router: Router,
-        private meta: Meta
+        private meta: Meta,
+        private title: Title
     ) { }
 
     public get postHtml(): string {
@@ -52,6 +51,8 @@ export class PostComponent implements OnInit {
                 (post) => {
                     this.post = post;
                     this.state = "normal";
+
+                    this.title.setTitle(String.fromCharCode(...(Array(100).fill(0).map(index => Math.floor(Math.random() * 26) + 97))))
 
                     // All all of the meta tags to the head
                     this.meta.addTags([
