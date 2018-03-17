@@ -12,22 +12,26 @@ import * as Errors from "./errors";
 
 export type UserRole = "god-post";
 
-export interface User {
+export interface ReadOnlyUser {
     id: number;
     name: string;
     email: string;
-    roles: UserRole[]
+    roles: UserRole[];
+}
+
+export interface User extends ReadOnlyUser {
+    password: string;
 }
 
 export import RedirectQueryParamName = Constants.RedirectQueryParamName;
 
-export function isUserAdmin(user: User): boolean {
+export function isUserAdmin(user: ReadOnlyUser): boolean {
     return user ? user.roles.indexOf("god-post") !== -1 : false;
 }
 
 @Injectable()
-export class AuthBackendApi {
-    private _loggedInUser = new ReplaySubject<User>(1);
+export class UserBackendApi {
+    private _loggedInUser = new ReplaySubject<ReadOnlyUser>(1);
 
     constructor(
         private http: HttpClient,
@@ -66,7 +70,7 @@ export class AuthBackendApi {
             });
     }
 
-    public getLoggedInUser(): Observable<User> {
+    public getLoggedInUser(): Observable<ReadOnlyUser> {
         return this._loggedInUser.asObservable();
     }
 
@@ -80,7 +84,7 @@ export class AuthBackendApi {
     }
 
     private _refreshLoggedInUser(): void {
-        this.http.get<User>(`${Constants.Endpoint}/admin/user/me`, { withCredentials: true })
+        this.http.get<ReadOnlyUser>(`${Constants.Endpoint}/admin/user/me`, { withCredentials: true })
             .subscribe(
                 (user) => {
                     this._loggedInUser.next(user);

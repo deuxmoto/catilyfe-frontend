@@ -9,7 +9,7 @@ import {
 } from "@angular/animations";
 
 import { TitleBarService } from "./title-bar.service";
-import { AuthBackendApi, User } from "../../core/backend-api/auth.backend-api";
+import { UserBackendApi, ReadOnlyUser } from "../../core/backend-api/user.backend-api";
 
 interface MenuItem {
     text: string;
@@ -42,10 +42,10 @@ export class TitleBarComponent implements OnInit {
     @Input()
     public showBranding = true;
 
-    public loggedInUser: User;
+    public loggedInUser: ReadOnlyUser;
 
     constructor(
-        private authBackendApi: AuthBackendApi,
+        private authBackendApi: UserBackendApi,
         private router: Router,
         private titleBarService: TitleBarService
     ) { }
