@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { Title } from '@angular/platform-browser';
 import { Router } from "@angular/router";
 
 import { Observable } from "rxjs/Observable";
@@ -8,6 +9,7 @@ import "rxjs/add/operator/throttleTime";
 import "rxjs/add/operator/delay";
 
 import { BackendApiService, PostMetadata } from "../core/backend-api.service";
+import * as Constants from "../shared/constants";
 
 const scrollDebounceIntervalMs = 200;
 
@@ -24,10 +26,12 @@ export class HomeComponent implements OnInit {
 
     constructor(
         private backend: BackendApiService,
-        private router: Router
+        private router: Router,
+        private title: Title,
     ) { }
 
     public ngOnInit(): void {
+        this.title.setTitle(Constants.SiteName);
         this.recentPosts = this.backend.getRecentPostMetadata(10);
 
         // Listen to scroll events

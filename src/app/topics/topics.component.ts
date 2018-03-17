@@ -1,7 +1,9 @@
 import { Component, OnInit } from "@angular/core";
+import { Title } from "@angular/platform-browser";
 import { Params, ActivatedRoute, Router } from "@angular/router";
 
 import { Tag, TagsBackendApi } from "../core/backend-api/tags.backend-api";
+import * as Constants from "../shared/constants";
 
 const topicQueryParamKey = "topic";
 
@@ -17,10 +19,13 @@ export class TopicsComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private tagsBackendApi: TagsBackendApi
+        private tagsBackendApi: TagsBackendApi,
+        private title: Title,
     ) { }
 
     public ngOnInit(): void {
+        this.title.setTitle(`Topics - ${Constants.SiteName}`);
+
         // Subscribe to query params on this page to determine what topic
         // is passed through query params, if any
         this.route.queryParamMap.subscribe((queryParams) => {
