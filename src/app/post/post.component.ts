@@ -1,5 +1,5 @@
 import { Meta, Title } from '@angular/platform-browser';
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { Observable } from "rxjs/Observable";
@@ -18,11 +18,13 @@ type State = "normal" | "loading";
     templateUrl: "./post.component.html",
     styleUrls: [ "./post.component.scss" ]
 })
-export class PostComponent implements OnInit {
+export class PostComponent implements OnInit, OnDestroy {
     public state: State = "loading";
     public post: Post;
 
     public isUserAdmin: boolean;
+
+    private metaTagNames: string[] = [];
 
     constructor(
         private authBackend: AuthBackendApi,
@@ -55,9 +57,9 @@ export class PostComponent implements OnInit {
                     this.title.setTitle(`${this.post.metadata.title} - ${Constants.SiteName}`);
 
                     // All all of the meta tags to the head
-                    this.meta.addTags([
+                    this.addMetaTags([
                         // Normal
-                        { name: "tile", content: this.post.metadata.title },
+                        { name: "title", content: this.post.metadata.title },
                         { name: "author", content: this.post.metadata.author.name },
                         { name: "description", content: this.post.metadata.description },
                         { name: "keywords", content: this.post.metadata.tags.join(",")},
@@ -88,6 +90,19 @@ export class PostComponent implements OnInit {
 
         this.authBackend.getLoggedInUser().subscribe((user) => {
             this.isUserAdmin = isUserAdmin(user);
+        });
+    }
+
+    public ngOnDestroy(): void {
+        this.metaTagNames.forEach((tagName) => {
+            this.meta.removeTag(`name='${tagName}'`);
+        });
+    }
+
+    private addMetaTags(tags: {name: string; content: string;}[]): void {
+        this.meta.addTags(tags);
+        tags.forEach((tag) => {
+            this.metaTagNames.push(tag.name);
         });
     }
 }
