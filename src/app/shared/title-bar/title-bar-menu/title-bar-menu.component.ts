@@ -8,7 +8,7 @@ import {
 } from "@angular/animations";
 
 import { TitleBarService } from "../title-bar.service";
-import { AuthBackendApi, User, isUserAdmin } from "../../../core/backend-api/auth.backend-api";
+import { UserBackendApi, ReadOnlyUser, isUserAdmin } from "../../../core/backend-api/user.backend-api";
 
 interface MenuItem {
     text: string;
@@ -35,10 +35,10 @@ interface MenuItem {
 export class TitleBarMenuComponent implements OnInit {
     public menuItems: MenuItem[];
     public menuIsOpen = false;
-    public loggedInUser: User;
+    public loggedInUser: ReadOnlyUser;
 
     constructor(
-        private authBackendApi: AuthBackendApi,
+        private authBackendApi: UserBackendApi,
         private titleBarService: TitleBarService
     ) { }
 

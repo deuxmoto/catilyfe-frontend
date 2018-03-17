@@ -6,7 +6,7 @@ import { Observable } from "rxjs/Observable";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
 
-import { AuthBackendApi, RedirectQueryParamName} from "../core/backend-api/auth.backend-api";
+import { UserBackendApi, RedirectQueryParamName} from "../core/backend-api/user.backend-api";
 
 @Component({
     selector: "app-login",
@@ -18,7 +18,7 @@ export class LoginComponent implements OnInit {
     private redirectUrl: string;
 
     constructor(
-        private authBackendApi: AuthBackendApi,
+        private authBackendApi: UserBackendApi,
         private route: ActivatedRoute,
         private router: Router,
         private fb: FormBuilder

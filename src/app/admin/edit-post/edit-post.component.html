@@ -53,6 +53,11 @@
 
                 <h3>Publishing</h3>
                 <mat-form-field class="edit-post-field">
+                    <mat-select placeholder="Author" formControlName="authorId">
+                        <mat-option *ngFor="let user of allUsers" [value]="user.id">{{user.name}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+                <mat-form-field class="edit-post-field">
                     <input matInput placeholder="Slug" name="slug" formControlName="slug">
                 </mat-form-field>
                 <datetime-picker class="edit-post-field" namePrefix="When published" name="whenPublished" formControlName="whenPublished"></datetime-picker>

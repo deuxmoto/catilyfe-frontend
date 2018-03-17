@@ -16,6 +16,7 @@ export interface AdminPostMetadata {
     id?: number;
     whenCreated?: Date;
     revision?: number;
+    authorId: number;
     slug: string;
     title: string;
     whenPublished: Date;

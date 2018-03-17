@@ -6,7 +6,7 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
 
 import { NotFoundError } from "../core/backend-api/errors";
-import { AuthBackendApi, isUserAdmin } from "../core/backend-api/auth.backend-api";
+import { UserBackendApi, isUserAdmin } from "../core/backend-api/user.backend-api";
 import { Post, PostsBackendApi } from "../core/backend-api/posts.backend-api";
 
 type State = "normal" | "loading";
@@ -23,7 +23,7 @@ export class PostComponent implements OnInit {
     public isUserAdmin: boolean;
 
     constructor(
-        private authBackend: AuthBackendApi,
+        private authBackend: UserBackendApi,
         private postsBackend: PostsBackendApi,
         private route: ActivatedRoute,
         private router: Router

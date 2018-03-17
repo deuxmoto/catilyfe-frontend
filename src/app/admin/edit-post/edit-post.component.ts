@@ -7,15 +7,18 @@ import { DataSource } from "@angular/cdk/collections";
 
 import { Observable } from "rxjs/Observable";
 import "rxjs/add/observable/fromEvent";
+import "rxjs/add/operator/first";
 import "rxjs/add/operator/map";
 
 import { MarkdownPreviewComponent } from "./markdown-preview/markdown-preview.component";
 import { UploadFileComponent } from "./upload-file/upload-file.component";
+import { AdminBackendApi } from "../../core/backend-api/admin.backend-api";
 import {
     BackendApiService, AdminPost, AdminPostMetadata,
     NotFoundError, OtherError
 } from "../../core/backend-api.service";
 import { Image } from "../../core/backend-api/image.backend-api";
+import { ReadOnlyUser, UserBackendApi } from "../../core/backend-api/user.backend-api";
 
 enum State {
     Normal,
@@ -71,15 +74,19 @@ export class EditPostComponent implements OnInit {
     ];
     public currentTab = Tab.Metadata;
 
+    public allUsers: ReadOnlyUser[] = [];
+
     @ViewChild("postContent")
     public postContent: ElementRef;
 
     constructor(
+        private adminBackendApi: AdminBackendApi,
         private backend: BackendApiService,
         private route: ActivatedRoute,
         private router: Router,
         private location: Location,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private userBackendApi: UserBackendApi
     ) { }
 
     public ngOnInit(): void {
@@ -89,6 +96,7 @@ export class EditPostComponent implements OnInit {
             title: new FormControl(""),
             description: new FormControl(""),
             slug: new FormControl(""),
+            authorId: new FormControl(null),
             whenCreated: new FormControl({ value: "", disabled: true }),
             whenPublished: new FormControl(new Date()),
             isPublished: new FormControl(false),
@@ -97,10 +105,22 @@ export class EditPostComponent implements OnInit {
         });
 
         const id = this.route.snapshot.paramMap.get("id");
+        this.adminBackendApi.getAllUsers().subscribe((users) => {
+            this.allUsers = users;
+        });
         if (!id) {
             // New post
             this.state = State.Normal;
             this.newPost = true;
+
+            // Set author field to logged in user
+            this.userBackendApi.getLoggedInUser().first().subscribe((user) => {
+                if (user) {
+                    this.metadataForm.reset({
+                        authorId: user.id
+                    });
+                }
+            });
         }
         else {
             // Existing post
@@ -109,6 +129,7 @@ export class EditPostComponent implements OnInit {
                     const metadata = post.metadata;
                     this.metadataForm.reset({
                         id: metadata.id,
+                        authorId: metadata.authorId,
                         title: metadata.title,
                         description: metadata.description,
                         slug: metadata.slug,
@@ -140,6 +161,7 @@ export class EditPostComponent implements OnInit {
         const adminPost: AdminPost = {
             metadata: {
                 title: formMetadata.get("title").value,
+                authorId: formMetadata.get("authorId").value,
                 description: formMetadata.get("description").value,
                 slug: formMetadata.get("slug").value,
                 whenPublished: formMetadata.get("whenPublished").value,
