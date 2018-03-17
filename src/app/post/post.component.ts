@@ -9,7 +9,7 @@ import "rxjs/add/operator/catch";
 import { NotFoundError } from "../core/backend-api/errors";
 import { AuthBackendApi, isUserAdmin } from "../core/backend-api/auth.backend-api";
 import { Post, PostsBackendApi } from "../core/backend-api/posts.backend-api";
-import { Constants } from "../shared/constants";
+import * as Constants from "../shared/constants";
 
 type State = "normal" | "loading";
 
@@ -52,7 +52,7 @@ export class PostComponent implements OnInit {
                     this.post = post;
                     this.state = "normal";
 
-                    this.title.setTitle(String.fromCharCode(...(Array(100).fill(0).map(index => Math.floor(Math.random() * 26) + 97))))
+                    this.title.setTitle(`${this.post.metadata.title} - ${Constants.SiteName}`);
 
                     // All all of the meta tags to the head
                     this.meta.addTags([
@@ -61,7 +61,7 @@ export class PostComponent implements OnInit {
                         { name: "author", content: this.post.metadata.author.name },
                         { name: "description", content: this.post.metadata.description },
                         { name: "keywords", content: this.post.metadata.tags.join(",")},
-                        
+
                         // Facebooks garbage. Can remove if/when they go under.
                         { name: "og:title", content: this.post.metadata.title },
                         { name: "og:type", content: "article" },
