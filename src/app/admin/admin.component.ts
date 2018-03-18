@@ -1,5 +1,6 @@
 import { Component, HostBinding, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Title } from '@angular/platform-browser';
 import { DataSource } from "@angular/cdk/collections";
 import { MatSort } from "@angular/material";
 
@@ -8,6 +9,7 @@ import { Subject } from "rxjs/Subject";
 import "rxjs/add/operator/map";
 
 import { BackendApiService, AdminPostMetadata } from "../core/backend-api.service";
+import * as Constants from "../shared/constants";
 
 @Component({
     selector: "app-admin",
@@ -27,10 +29,12 @@ export class AdminComponent implements OnInit {
         private backend: BackendApiService,
         private route: ActivatedRoute,
         private router: Router,
+        private title: Title,
     ) { }
 
     public ngOnInit(): void {
         this.dataSource = new AdminPostMetadataDatasource(this.backend);
+        this.title.setTitle(`Admin - ${Constants.SiteName}`);
     }
 
     public editPost(id: string): void {

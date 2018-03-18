@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from "@angular/router";
 
 import { Observable } from "rxjs/Observable";
@@ -7,6 +8,7 @@ import "rxjs/add/operator/map";
 import "rxjs/add/operator/catch";
 
 import { UserBackendApi, RedirectQueryParamName} from "../core/backend-api/user.backend-api";
+import * as Constants from "../shared/constants";
 
 @Component({
     selector: "app-login",
@@ -21,7 +23,8 @@ export class LoginComponent implements OnInit {
         private authBackendApi: UserBackendApi,
         private route: ActivatedRoute,
         private router: Router,
-        private fb: FormBuilder
+        private fb: FormBuilder,
+        private title: Title,
     ) { }
 
     public ngOnInit() {
@@ -33,6 +36,8 @@ export class LoginComponent implements OnInit {
         this.route.queryParams.subscribe((queryParams) => {
             this.redirectUrl = queryParams[RedirectQueryParamName];
         });
+
+        this.title.setTitle(`Login - ${Constants.SiteName}`);
     }
 
     public onSubmit(): void {
