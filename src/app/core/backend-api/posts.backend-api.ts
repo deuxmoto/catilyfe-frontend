@@ -20,6 +20,7 @@ export interface PostMetadata {
     whenPublished: Date;
     tags: Array<string>;
     author: AuthorInfo;
+    image: string;
 }
 
 export interface Post {
