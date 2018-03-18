@@ -2,7 +2,7 @@
     Loading...
 </div>
 <div class="post-preview" *ngFor="let post of posts | async">
-    <a class="post-preview__image" *ngIf="post.previewImageUri" [routerLink]="post.postUri" [ngStyle]="{ 'background-image': post.previewImageUri }"></a>
+    <a class="post-preview__image" [routerLink]="post.postUri" [ngStyle]="{ 'background-image': post.previewImageUri }"></a>
     <div class="post-preview__info post-info">
         <a class="post-info__title" [routerLink]="post.postUri">{{post.metadata.title}}</a>
         <div class="post-info__date-author">

@@ -61,7 +61,7 @@ export class PostPreviewComponent implements OnChanges {
                     // Add extra properties to post object for ui
                     return mergeObjects(post, {
                         postUri: "/posts/" + post.metadata.slug,
-                        previewImageUri: "url(assets/placeholder.svg)"
+                        previewImageUri: (!!post.metadata.image ? `url(${post.metadata.image})` : "url(assets/placeholder.svg)"),
                     });
                 })
             });
