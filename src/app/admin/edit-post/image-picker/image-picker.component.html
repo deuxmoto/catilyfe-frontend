@@ -1,0 +1,38 @@
+<h2 mat-dialog-title>Pick image</h2>
+<mat-dialog-content class="content">
+    <mat-tab-group [(selectedIndex)]="selectedTab">
+        <mat-tab label="Upload new image">
+            <form class="content__tab-content new-image" [formGroup]="form">
+                <mat-form-field class="new-image__field">
+                    <input matInput placeholder="Slug" formControlName="slug">
+                </mat-form-field>
+                <mat-form-field class="new-image__field">
+                    <input matInput placeholder="Description" formControlName="description">
+                </mat-form-field>
+                <input class="new-image__field" type="file" (change)="setFile($event)" />
+            </form>
+        </mat-tab>
+        <mat-tab label="Existing images">
+            <div class="content__tab-content existing-images">
+                <div class="existing-images__inner">
+                    <button class="existing-image" *ngFor="let existingImage of existingImages" (click)="selectImage(existingImage)">
+                        <div class="existing-image__thumbnail">
+                            <img class="existing-image__thumbnail-img" [src]="existingImage.imageUrl" />
+                        </div>
+                        <div class="existing-image__content">
+                            <p class="existing-image__title">{{existingImage.title}}</p>
+                            <p class="existing-image__description">{{existingImage.description}}</p>
+                        </div>
+                        <span class="existing-image__selected fa fa-check-circle" *ngIf="existingImage.isSelected"></span>
+                    </button>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</mat-dialog-content>
+<mat-dialog-actions class="actions">
+    <button mat-button [disabled]="okButtonDisabled()" (click)="uploadAndClose()">
+        <span *ngIf="!isUploading">OK</span>
+        <span *ngIf="isUploading">Uploading...</span>
+    </button>
+</mat-dialog-actions>

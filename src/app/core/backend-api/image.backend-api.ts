@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 
 import { Observable } from "rxjs/Observable";
 
@@ -41,6 +41,18 @@ export class ImageBackendApi {
 
         return this.http.post<Image>(`${Constants.Endpoint}/image`, formData, {
             headers: headers
+        });
+    }
+
+    public getImages(top?: number): Observable<Image[]> {
+        let params = new HttpParams();
+
+        if (top) {
+            params = params.append("top", "" + top);
+        }
+
+        return this.http.get<Image[]>(`${Constants.Endpoint}/image`, {
+            params: params
         });
     }
 }
