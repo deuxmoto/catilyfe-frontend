@@ -11,7 +11,7 @@ import "rxjs/add/operator/first";
 import "rxjs/add/operator/map";
 
 import { MarkdownPreviewComponent } from "./markdown-preview/markdown-preview.component";
-import { UploadFileComponent } from "./upload-file/upload-file.component";
+import { ImagePickerComponent } from "./image-picker/image-picker.component";
 import { AdminBackendApi } from "../../core/backend-api/admin.backend-api";
 import {
     BackendApiService, AdminPost, AdminPostMetadata,
@@ -213,21 +213,28 @@ export class EditPostComponent implements OnInit {
     }
 
     public uploadImage(): void {
-        const dialogRef = this.dialog.open(UploadFileComponent);
+        const dialogRef = this.dialog.open(ImagePickerComponent);
         dialogRef.afterClosed().subscribe((result: Image) => {
+            if (!result) {
+                return;
+            }
+
             const markdownImageText = `![${result.description}](${result.links[0].url})`;
             const postContentTextbox = this.postContent.nativeElement;
 
             const cursorPosition = postContentTextbox.selectionStart;
-            const textBoxValue = postContentTextbox.value;
-            postContentTextbox.value =
-                textBoxValue.substring(0, cursorPosition)
+            const content = this.content;
+            this.content =
+                content.substring(0, cursorPosition)
                 + markdownImageText
-                + textBoxValue.substring(cursorPosition, textBoxValue.length);
+                + content.substring(cursorPosition, content.length);
 
             const newCursorPosition = cursorPosition + markdownImageText.length;
-            postContentTextbox.setSelectionRange(newCursorPosition, newCursorPosition);
-            postContentTextbox.focus();
+
+            setTimeout(() => {
+                postContentTextbox.setSelectionRange(newCursorPosition, newCursorPosition);
+                postContentTextbox.focus();
+            });
         });
     }
 

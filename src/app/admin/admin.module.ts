@@ -3,7 +3,7 @@ import {
     MatButtonModule, MatCardModule, MatDatepickerModule,
     MatNativeDateModule, MatFormFieldModule, MatChipsModule,
     MatInputModule, MatOptionModule, MatSelectModule, MatSlideToggleModule,
-    MatTableModule, MatDialogModule
+    MatTableModule, MatDialogModule, MatTabsModule
 } from "@angular/material";
 import { Route, RouterModule } from "@angular/router";
 
@@ -12,7 +12,7 @@ import { EditPostComponent } from "./edit-post/edit-post.component";
 import { DateTimePickerComponent } from "./edit-post/datetime-picker/datetime-picker.component";
 import { PadTimePipe } from "./edit-post/datetime-picker/pad-time.pipe";
 import { MarkdownPreviewComponent } from "./edit-post/markdown-preview/markdown-preview.component";
-import { UploadFileComponent } from "./edit-post/upload-file/upload-file.component";
+import { ImagePickerComponent } from "./edit-post/image-picker/image-picker.component";
 
 import { SharedModule } from "../shared/shared.module";
 
@@ -46,6 +46,7 @@ const adminRoutes: Route[] = [
         MatSelectModule,
         MatSlideToggleModule,
         MatTableModule,
+        MatTabsModule,
         SharedModule
     ],
     declarations: [
@@ -54,10 +55,10 @@ const adminRoutes: Route[] = [
         EditPostComponent,
         MarkdownPreviewComponent,
         PadTimePipe,
-        UploadFileComponent
+        ImagePickerComponent
     ],
     entryComponents: [
-        UploadFileComponent
+        ImagePickerComponent
     ]
 })
 export class AdminModule { }

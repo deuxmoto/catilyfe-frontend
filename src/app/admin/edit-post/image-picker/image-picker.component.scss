@@ -1,0 +1,98 @@
+@import "../../../styles/helpers";
+
+.content {
+    max-height: 100vh;
+
+    @include if-larger-than-mobile() {
+        width: 40vw;
+    }
+
+    &__tab-content {
+        height: 60vh;
+    }
+}
+
+.new-image {
+    &__field {
+        width: 100%;
+    }
+}
+
+.existing-images {
+    overflow-y: auto;
+}
+
+.existing-image {
+    $thumbnailSize: 100px;
+
+    display: flex;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin: 0.5rem 0;
+    padding: 0.5rem;
+
+    &:first-child {
+        margin-top: 0;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &__thumbnail {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex: none;
+
+        width: $thumbnailSize;
+        height: $thumbnailSize;
+    }
+    &__thumbnail-img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    &__content {
+        margin-left: 15px;
+        text-align: left;
+        flex: 1 1 0%;
+        overflow: hidden;
+    }
+
+    &__title {
+        margin: 0;
+        font-weight: bold;
+        word-wrap: break-word;
+    }
+
+    &__description {
+        margin: 0;
+        word-wrap: break-word;
+    }
+
+    &__selected {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        font-size: 30px;
+        width: 3em;
+        height: 100%;
+        color: rgb(24, 199, 24); // mostly green, for Peter
+    }
+}
+
+.actions {
+    display: flex;
+    justify-content: flex-end;
+}
