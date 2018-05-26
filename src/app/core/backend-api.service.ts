@@ -99,7 +99,7 @@ export class BackendApiService {
     }
 
     public getAdminPostMetadata(count = 1000): Observable<AdminPostMetadata[]> {
-        return this.http.get<AdminPostMetadata[]>(`${BackendEndpoint}/admin/post?top=${count}`, {
+        return this.http.get<AdminPostMetadata[]>(`${BackendEndpoint}/admin/post?top=${count}&includeUnpublished=true`, {
             withCredentials: true
         })
             .map((postMetadata) => {
