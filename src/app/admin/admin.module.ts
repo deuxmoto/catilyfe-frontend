@@ -18,15 +18,15 @@ import { SharedModule } from "../shared/shared.module";
 
 const adminRoutes: Route[] = [
     {
-        path: "admin",
+        path: "",
         component: AdminComponent
     },
     {
-        path: "admin/editpost/:id",
+        path: "editpost/:id",
         component: EditPostComponent
     },
     {
-        path: "admin/newpost",
+        path: "newpost",
         component: EditPostComponent
     }
 ];

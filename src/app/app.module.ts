@@ -7,7 +7,6 @@ import { Route, RouterModule } from "@angular/router";
 
 import { AppComponent } from "./app.component";
 import { NotFoundComponent } from "./404/404.component";
-import { AdminModule } from "./admin/admin.module";
 import { CoreModule } from "./core/core.module";
 import { HomeComponent } from "./home/home.component";
 import { LoginComponent } from "./login/login.component";
@@ -24,6 +23,10 @@ const routes: Route[] = [
     {
         path: "home",
         redirectTo: ""
+    },
+    {
+        path: "admin",
+        loadChildren: "app/admin/admin.module#AdminModule"
     },
     {
         path: "posts/:slug",
@@ -73,7 +76,6 @@ const routes: Route[] = [
         MatInputModule,
         MatSelectModule,
 
-        AdminModule,
         SharedModule
     ],
     providers: [ ],
