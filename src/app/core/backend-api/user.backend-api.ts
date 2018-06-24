@@ -2,10 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpResponseBase, HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 
-import { Observable } from "rxjs/Observable";
-import { ReplaySubject } from "rxjs/ReplaySubject";
-import "rxjs/add/observable/throw";
-import "rxjs/add/operator/do";
+import { throwError as observableThrowError, Observable, ReplaySubject } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 
 import * as Constants from "./constants";
 import * as Errors from "./errors";
@@ -45,29 +43,29 @@ export class UserBackendApi {
             email: email,
             password: password
         };
-        return this.http.put<void>(`${Constants.Endpoint}/login`, credentials, { withCredentials: true })
-            .catch((error) => {
-                return Observable.throw(Errors.parseError(error));
-            })
-            .do((result) => {
+        return this.http.put<void>(`${Constants.Endpoint}/login`, credentials, { withCredentials: true }).pipe(
+            catchError((error) => {
+                return observableThrowError(Errors.parseError(error));
+            }),
+            tap((result) => {
                 // Refresh logged in user if login was successful
                 if (!Errors.isError(result)) {
                     this._refreshLoggedInUser();
                 }
-            });
+            }));
     }
 
     public logout(): Observable<void> {
-        return this.http.delete<void>(`${Constants.Endpoint}/login`, { withCredentials: true })
-            .catch((error) => {
-                return Observable.throw(Errors.parseError(error));
-            })
-            .do((result) => {
+        return this.http.delete<void>(`${Constants.Endpoint}/login`, { withCredentials: true }).pipe(
+            catchError((error) => {
+                return observableThrowError(Errors.parseError(error));
+            }),
+            tap((result) => {
                 // If logout was successful, set logged in user to null
                 if (!Errors.isError(result)) {
                     this._loggedInUser.next(null);
                 }
-            });
+            }));
     }
 
     public getLoggedInUser(): Observable<ReadOnlyUser> {
@@ -76,9 +74,9 @@ export class UserBackendApi {
 
     public gotoLoginPage(): void {
         const currentUrl = this.router.url;
-        this.router.navigate(["/login"], {
+        this.router.navigate([ "/login" ], {
             queryParams: {
-                [RedirectQueryParamName]: currentUrl
+                [ RedirectQueryParamName ]: currentUrl
             }
         });
     }

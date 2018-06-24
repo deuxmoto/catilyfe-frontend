@@ -4,9 +4,7 @@ import { Title } from '@angular/platform-browser';
 import { DataSource } from "@angular/cdk/collections";
 import { MatSort } from "@angular/material";
 
-import { Observable } from "rxjs/Observable";
-import { Subject } from "rxjs/Subject";
-import "rxjs/add/operator/map";
+import { Observable, Subject } from "rxjs";
 
 import { BackendApiService, AdminPostMetadata } from "../core/backend-api.service";
 import * as Constants from "../shared/constants";

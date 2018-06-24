@@ -2,11 +2,8 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, Router, Params as QueryParams } from "@angular/router";
 import { HttpClient, HttpHeaders, HttpErrorResponse } from "@angular/common/http";
 
-import { Observable } from "rxjs/Observable";
-import { ErrorObservable } from "rxjs/observable/ErrorObservable";
-import "rxjs/add/observable/throw";
-import "rxjs/add/operator/catch";
-import "rxjs/add/operator/map";
+import { throwError as observableThrowError, Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 import * as Errors from "./backend-api/errors";
 
@@ -76,72 +73,72 @@ export class BackendApiService {
     ) { }
 
     public getRecentPostMetadata(count: number): Observable<PostMetadata[]> {
-        return this.http.get<PostMetadata[]>(`${BackendEndpoint}/postmetadata?top=${count}`)
-            .map((postMetadata) => {
+        return this.http.get<PostMetadata[]>(`${BackendEndpoint}/postmetadata?top=${count}`).pipe(
+            map((postMetadata) => {
                 // Convert date strings to actual dates
                 postMetadata.forEach((metadata) => {
                     convertDateStringsToObjects(metadata);
                 });
 
                 return postMetadata;
-            });
+            }));
     }
 
     public getPost(slug: string): Observable<Post> {
-        return this.http.get<Post>(`${BackendEndpoint}/post/${slug}`)
-            .map((post) => {
+        return this.http.get<Post>(`${BackendEndpoint}/post/${slug}`).pipe(
+            map((post) => {
                 convertDateStringsToObjects(post.metadata);
                 return post;
-            })
-            .catch((error) => {
-                return this._handleFetchError(error);
-            });
+            }),
+            catchError((error) => {
+                return observableThrowError(this._handleFetchError(error));
+            }));
     }
 
     public getAdminPostMetadata(count = 1000): Observable<AdminPostMetadata[]> {
         return this.http.get<AdminPostMetadata[]>(`${BackendEndpoint}/admin/post?top=${count}&includeUnpublished=true`, {
             withCredentials: true
-        })
-            .map((postMetadata) => {
+        }).pipe(
+            map((postMetadata) => {
                 postMetadata.forEach((metadata) => {
                     convertDateStringsToObjects(metadata);
                 });
                 return postMetadata;
-            })
-            .catch((error) => {
-                return this._handleFetchError(error);
-            });
+            }),
+            catchError((error) => {
+                return observableThrowError(this._handleFetchError(error));
+            }));
     }
 
     public getAdminPost(id: string): Observable<AdminPost> {
         return this.http.get<AdminPost>(`${BackendEndpoint}/admin/post/${id}`, {
             withCredentials: true
-        })
-            .map((adminPost) => {
+        }).pipe(
+            map((adminPost) => {
                 convertDateStringsToObjects(adminPost.metadata);
                 return adminPost;
-            })
-            .catch((error) => {
-                return this._handleFetchError(error);
-            });
+            }),
+            catchError((error) => {
+                return observableThrowError(this._handleFetchError(error));
+            }));
     }
 
     public setAdminPost(post: AdminPost): Observable<AdminPost> {
-        return this.http.post(`${BackendEndpoint}/admin/post`, post, {
+        return this.http.post<AdminPost>(`${BackendEndpoint}/admin/post`, post, {
             withCredentials: true
-        })
-            .catch((error) => {
-                return this._handleFetchError(error);
-            });
+        }).pipe(
+            catchError((error) => {
+                return observableThrowError(this._handleFetchError(error));
+            }));
     }
 
     public getMarkdownPreview(markdown: string): Observable<MarkdownPreview> {
         return this.http.post<MarkdownPreview>(`${BackendEndpoint}/admin/previewmarkdown`, { markdown }, {
             withCredentials: true
-        })
-            .catch((error) => {
-                return this._handleFetchError(error);
-            });
+        }).pipe(
+            catchError((error) => {
+                return observableThrowError(this._handleFetchError(error));
+            }));
     }
 
     public loginUser(email: string, password: string): Observable<void> {
@@ -152,24 +149,24 @@ export class BackendApiService {
         return this.http.put<void>(`${BackendEndpoint}/login`, credentials, { withCredentials: true });
     }
 
-    private _handleFetchError(error: any): ErrorObservable {
+    private _handleFetchError(error: any): Errors.BaseError {
         if (error instanceof HttpErrorResponse) {
             switch (error.status) {
                 case 404:
-                    return Observable.throw(new Errors.NotFoundError());
+                    return new Errors.NotFoundError();
                 case 401:
                     const redirectUrl = this.router.url;
-                    this.router.navigate(["/login"], {
+                    this.router.navigate([ "/login" ], {
                         queryParams: {
-                            [RedirectQueryParamName]: redirectUrl
+                            [ RedirectQueryParamName ]: redirectUrl
                         }
                     });
-                    return Observable.throw(new Errors.UnauthorizedError());
+                    return new Errors.UnauthorizedError();
             }
         }
 
         const unknownError = new Errors.OtherError(error);
         console.error(`${unknownError.errorMessage} %o`, error);
-        return Observable.throw(unknownError);
+        return unknownError;
     }
 }

@@ -3,10 +3,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Title } from '@angular/platform-browser';
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/catch";
-
 import { UserBackendApi, RedirectQueryParamName} from "../core/backend-api/user.backend-api";
 import * as Constants from "../shared/constants";
 

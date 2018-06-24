@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpParams } from "@angular/common/http";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/throw";
+import { Observable } from "rxjs";
+import { catchError, map } from 'rxjs/operators';
 
 import * as Constants from "./constants";
 import * as Errors from "./errors";
@@ -46,20 +46,20 @@ const parseDateObjects = (postMetadata: PostMetadata): void => {
 
 @Injectable()
 export class PostsBackendApi {
-    constructor (
+    constructor(
         private http: HttpClient
-    ) {}
+    ) { }
 
     public getPostMetadata(top: number): Observable<PostMetadata[]> {
-        return this.http.get<PostMetadata[]>(`${Constants.Endpoint}/postmetadata?top=${top}`)
-            .map((postMetadata) => {
+        return this.http.get<PostMetadata[]>(`${Constants.Endpoint}/postmetadata?top=${top}`).pipe(
+            map((postMetadata) => {
                 // Convert date strings to actual dates
                 postMetadata.forEach((metadata) => {
                     parseDateObjects(metadata);
                 });
 
                 return postMetadata;
-            });
+            }));
     }
 
     public getPosts(options?: FetchPostsOptions): Observable<Post[]> {
@@ -80,24 +80,24 @@ export class PostsBackendApi {
             }, params);
         }
 
-        return this.http.get<Post[]>(`${Constants.Endpoint}/post`, { params: params })
-            .map((posts) => {
+        return this.http.get<Post[]>(`${Constants.Endpoint}/post`, { params: params }).pipe(
+            map((posts) => {
                 posts.forEach((post) => {
                     parseDateObjects(post.metadata);
                 });
 
                 return posts;
-            });
+            }));
     }
 
     public getPost(slug: string): Observable<Post> {
-        return this.http.get<Post>(`${Constants.Endpoint}/post/${slug}`)
-            .map((post) => {
+        return this.http.get<Post>(`${Constants.Endpoint}/post/${slug}`).pipe(
+            map((post) => {
                 parseDateObjects(post.metadata);
                 return post;
-            })
-            .catch((error) => {
+            }),
+            catchError((error) => {
                 return Errors.parseAndThrowError(error);
-            });
+            }));
     }
 }

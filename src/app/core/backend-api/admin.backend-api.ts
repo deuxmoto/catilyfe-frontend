@@ -2,9 +2,8 @@ import { Injectable } from "@angular/core";
 import { HttpClient, HttpResponseBase, HttpErrorResponse } from "@angular/common/http";
 import { Router } from "@angular/router";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/catch";
-import "rxjs/add/observable/throw";
+import { throwError as observableThrowError, Observable } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { UserBackendApi, ReadOnlyUser } from "./user.backend-api";
 import * as Constants from "./constants";
@@ -18,14 +17,14 @@ export class AdminBackendApi {
     ) { }
 
     public getAllUsers(): Observable<ReadOnlyUser[]> {
-        return this.http.get<ReadOnlyUser[]>(`${Constants.Endpoint}/admin/user`, { withCredentials: true })
-            .catch((error) => {
+        return this.http.get<ReadOnlyUser[]>(`${Constants.Endpoint}/admin/user`, { withCredentials: true }).pipe(
+            catchError((error) => {
                 const parsedError = Errors.parseError(error);
                 if (parsedError instanceof Errors.UnauthorizedError) {
                     this.userBackendApi.gotoLoginPage();
                 }
 
-                return Observable.throw(parsedError);
-            });
+                return observableThrowError(parsedError);
+            }));
     }
 }

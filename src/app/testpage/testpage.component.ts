@@ -1,16 +1,14 @@
 import { Component, OnInit, HostListener } from "@angular/core";
 import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition
+    trigger,
+    state,
+    style,
+    animate,
+    transition
 } from "@angular/animations";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/fromEvent";
-import "rxjs/add/operator/throttleTime";
-import "rxjs/add/operator/delay";
+import { fromEvent as observableFromEvent, Observable } from 'rxjs';
+import { throttleTime, delay } from 'rxjs/operators';
 
 const scrollDelayMs = 500;
 
@@ -34,9 +32,11 @@ export class TestPageComponent implements OnInit {
 
     ngOnInit(): void {
         // Listen to scroll events
-        Observable.fromEvent(window, "scroll")
-            .delay(scrollDelayMs / 2)
-            .throttleTime(scrollDelayMs / 2)
+        observableFromEvent(window, "scroll")
+            .pipe(
+                delay(scrollDelayMs / 2),
+                throttleTime(scrollDelayMs / 2)
+            )
             .subscribe(this.onScroll.bind(this));
     }
 
