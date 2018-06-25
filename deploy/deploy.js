@@ -71,7 +71,7 @@ function deployToAzure(url) {
 
     // Build and copy janx
     console.log("\nBuilding project with production flag set...");
-    executeCommand(`${BUILD_DIR}/node_modules/@angular/cli/bin/ng build --target production`);
+    executeCommand(`${BUILD_DIR}/node_modules/@angular/cli/bin/ng build --prod`);
     executeCommand(`cp -r ${BUILD_DIR}/dist/* ./`);
 
     // Add and commit to deployment repo
