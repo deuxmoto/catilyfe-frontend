@@ -62,16 +62,16 @@ function executeCommand(command, throwOnFailure = true) {
 }
 
 function deployToAzure(url) {
-    fs.mkdirSync(deployFolder);
-    process.chdir(deployFolder);
-
-    // Add azure website
-    executeCommand("git init");
-    executeCommand(`git remote add azure ${url}`);
-
-    // Build and copy janx
+    // Execute production build
+    process.chdir(BUILD_DIR);
     console.log("\nBuilding project with production flag set...");
     executeCommand(`${BUILD_DIR}/node_modules/@angular/cli/bin/ng build --prod`);
+
+    // Prepare the deployment folder
+    fs.mkdirSync(deployFolder);
+    process.chdir(deployFolder);
+    executeCommand("git init");
+    executeCommand(`git remote add azure ${url}`);
     executeCommand(`cp -r ${BUILD_DIR}/dist/* ./`);
 
     // Add and commit to deployment repo
