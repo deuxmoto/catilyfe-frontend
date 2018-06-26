@@ -66,7 +66,7 @@ export class ImagePickerComponent implements OnInit {
     }
 
     public setFile(event): void {
-        const files = event.srcElement.files;
+        const files = event.target.files;
         this.file = files && files.length && files[0];
     }
 

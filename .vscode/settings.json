@@ -1,0 +1,10 @@
+{
+    "files.exclude": {
+        "**/.git": false
+    },
+    "editor.formatOnSave": true,
+    "files.associations": {
+        ".prettierrc": "json",
+        ".lintstagedrc": "json"
+    }
+}
