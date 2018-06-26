@@ -5,10 +5,8 @@ import { MatDialog, MatDialogRef } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { DataSource } from "@angular/cdk/collections";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/observable/fromEvent";
-import "rxjs/add/operator/first";
-import "rxjs/add/operator/map";
+import { Observable } from "rxjs";
+import { first } from 'rxjs/operators';
 
 import { MarkdownPreviewComponent } from "./markdown-preview/markdown-preview.component";
 import { ImagePickerComponent } from "./image-picker/image-picker.component";
@@ -114,7 +112,7 @@ export class EditPostComponent implements OnInit {
             this.newPost = true;
 
             // Set author field to logged in user
-            this.userBackendApi.getLoggedInUser().first().subscribe((user) => {
+            this.userBackendApi.getLoggedInUser().pipe(first()).subscribe((user) => {
                 if (user) {
                     this.metadataForm.reset({
                         authorId: user.id

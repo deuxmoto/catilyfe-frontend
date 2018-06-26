@@ -2,11 +2,8 @@ import { Component, OnInit } from "@angular/core";
 import { Title } from '@angular/platform-browser';
 import { Router } from "@angular/router";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import "rxjs/add/observable/fromEvent";
-import "rxjs/add/operator/throttleTime";
-import "rxjs/add/operator/delay";
+import { fromEvent as observableFromEvent, Observable } from 'rxjs';
+import { throttleTime, delay } from 'rxjs/operators';
 
 import { BackendApiService, PostMetadata } from "../core/backend-api.service";
 import * as Constants from "../shared/constants";
@@ -35,18 +32,20 @@ export class HomeComponent implements OnInit {
         this.recentPosts = this.backend.getRecentPostMetadata(10);
 
         // Listen to scroll events
-        Observable.fromEvent(window, "scroll")
-            .delay(scrollDebounceIntervalMs / 2)
-            .throttleTime(scrollDebounceIntervalMs / 2)
+        observableFromEvent(window, "scroll")
+            .pipe(
+                delay(scrollDebounceIntervalMs / 2),
+                throttleTime(scrollDebounceIntervalMs / 2)
+            )
             .subscribe(this.onScroll.bind(this));
     }
 
     public navigateToPost(postSlug: string): void {
-        this.router.navigate(["posts", postSlug]);
+        this.router.navigate([ "posts", postSlug ]);
     }
 
     public navigateToTag(tag: string): void {
-        this.router.navigate(["/"]);
+        this.router.navigate([ "/" ]);
     }
 
     public onScroll(): void {

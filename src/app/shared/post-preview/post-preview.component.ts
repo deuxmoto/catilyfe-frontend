@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { Router } from "@angular/router";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/do";
+import { Observable } from "rxjs";
+import { map, tap } from 'rxjs/operators';
 
 import { PostsBackendApi, Post } from "../../core/backend-api/posts.backend-api";
 
@@ -22,7 +21,7 @@ interface PostForUi extends Post {
 const mergeObjects = <T, R>(obj1: T, obj2: R): T & R => {
     let mergedObject: any = obj1;
     Object.keys(obj2).forEach((obj2Key) => {
-        mergedObject[obj2Key] = obj2[obj2Key];
+        mergedObject[ obj2Key ] = obj2[ obj2Key ];
     });
     return mergedObject;
 };
@@ -51,12 +50,12 @@ export class PostPreviewComponent implements OnChanges {
         this.loading = true;
         this.posts = this.postsBackendApi.getPosts({
             top: this.top,
-            tags: [this.tag]
-        })
-            .do(() => {
+            tags: [ this.tag ]
+        }).pipe(
+            tap(() => {
                 this.loading = false;
-            })
-            .map((posts) => {
+            }),
+            map((posts) => {
                 return posts.map<PostForUi>((post) => {
                     // Add extra properties to post object for ui
                     return mergeObjects(post, {
@@ -64,6 +63,6 @@ export class PostPreviewComponent implements OnChanges {
                         previewImageUri: (!!post.metadata.image ? `url(${post.metadata.image})` : "url(assets/placeholder.svg)")
                     });
                 })
-            });
+            }));
     }
 }

@@ -2,10 +2,6 @@ import { Meta, Title } from '@angular/platform-browser';
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
 
-import { Observable } from "rxjs/Observable";
-import "rxjs/add/operator/map";
-import "rxjs/add/operator/catch";
-
 import { NotFoundError } from "../core/backend-api/errors";
 import { UserBackendApi, isUserAdmin } from "../core/backend-api/user.backend-api";
 import { Post, PostsBackendApi } from "../core/backend-api/posts.backend-api";
